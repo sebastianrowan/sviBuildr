@@ -2,10 +2,23 @@ Package: sviBuildr
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author@R: c(
+    person(
+        "Sebastian",
+        "Rowan",
+        email="sebastian.rowan@unh.edu",
+        role=c("aut", "cre")
+    )
+)
+URL: https://github.com/sebastianrowan/sviBuildr
+Description: R package to download the required census data and calculate the 
+    social vulnerability index (SVI) according to the methodology published by
+    the US CDC's Agency for Toxic Substances and Disease Registry (ADTSR)
+    (<https://www.atsdr.cdc.gov/placeandhealth/svi/index.html>). This package
+    allows users to calculate the SVI for any study region within the US.
+    sviBuildr utilizes the tidycensus package
+    (<https://github.com/walkerke/tidycensus>) to interface with the US Census
+    Bureau APIs. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
