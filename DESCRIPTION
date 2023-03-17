@@ -7,9 +7,7 @@ Author@R: c(
         "Sebastian",
         "Rowan",
         email="sebastian.rowan@unh.edu",
-        role=c("aut", "cre")
-    )
-)
+        role=c("aut", "cre")))
 URL: https://github.com/sebastianrowan/sviBuildr
 Description: R package to download the required census data and calculate the 
     social vulnerability index (SVI) according to the methodology published by
@@ -23,3 +21,14 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
+Imports: 
+    cli,
+    dplyr,
+    glue,
+    lifecycle,
+    rlang,
+    sf,
+    stringr,
+    tidycensus,
+    withr
+RoxygenNote: 7.2.2
