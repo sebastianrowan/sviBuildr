@@ -304,7 +304,7 @@ get_svi <- function(geography, cache_table = FALSE, year = 2020,
             epl_noveh = ntile(ep_noveh, 100) / 100,
             epl_groupq = ntile(ep_groupq, 100) / 100,
             spl_theme4 = (
-                epl_munit + epl_mobile + epl_crowd +epl_noveh +epl_groupq
+                epl_munit + epl_mobile + epl_crowd + epl_noveh + epl_groupq
             ),
             rpl_theme4 = ntile(spl_theme4, 100) / 100,
             spl_themes = (

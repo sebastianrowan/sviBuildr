@@ -36,6 +36,6 @@ utils::globalVariables(
         "e_disabl", "m_disabl", "e_sngpnt", "m_sngpnt", "e_limeng", "m_limeng",
         "e_minrty", "m_minrty", "e_munit", "m_munit", "e_mobile", "m_mobile",
         "e_crowd", "m_crowd", "e_noveh", "m_noveh", "e_groupq", "m_groupq",
-        "ep_nohsdp"
+        "ep_nohsdp", "f_theme1", "f_theme2", "f_theme3", "f_theme4"
     )
 )
