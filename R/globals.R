@@ -15,6 +15,27 @@ utils::globalVariables(
         "DP04_0058P", "S2802_C01_001", "S2802_C02_001", "DP05_0078",
         "DP05_0071", "DP05_0080", "DP05_0079", "DP05_0081", "DP05_0083",
         "DP05_0082", "DP05_0078P", "DP05_0071P", "DP05_0080P", "DP05_0079P",
-        "DP05_0081P", "DP05_0083P", "DP05_0082P"
+        "DP05_0081P", "DP05_0083P", "DP05_0082P", "epl_pov150", "epl_unemp",
+        "epl_hburd", "epl_nohsdp", "epl_uninsur",
+        "epl_age65", "epl_age17", "epl_disabl", "epl_sngpnt", "epl_limeng",
+        "epl_minrty", "epl_munit", "epl_mobile", "epl_crowd", "epl_noveh",
+        "epl_groupq", "f_pov150", "f_unemp", "f_hburd", "f_nohsdp", "f_uninsur",
+        "f_age65", "f_age17", "f_disabl", "f_sngpnt", "f_limeng",
+        "f_minrty", "f_munit", "f_mobile", "f_crowd", "f_noveh",
+        "f_groupq", "ep_pov150", "ep_unemp", "ep_hburd", "ep_nohsdp",
+        "ep_uninsur", "epl_pov150", "epl_unemp", "epl_hburd", "epl_nohsdp",
+        "epl_uninsur", "spl_theme1", "ep_age65", "ep_age17", "ep_disabl",
+        "ep_sngpnt", "ep_limeng", "epl_age65", "epl_age17", "epl_disabl",
+        "epl_sngpnt", "epl_limeng", "spl_theme2", "ep_minrty", "epl_minrty",
+        "spl_theme3", "ep_munit", "ep_mobile", "ep_crowd", "ep_noveh",
+        "ep_groupq", "epl_munit", "epl_mobile", "epl_crowd", "epl_noveh",
+        "epl_groupq", "spl_theme4", "spl_themes", "e_totpop", "m_totpop",
+        "e_hu", "m_hu", "e_hh", "m_hh", "e_pov150", "m_pov150", "e_unemp",
+        "m_unemp", "e_hburd", "m_hburd", "e_nohsdp", "m_nohsdp", "e_uninsur",
+        "m_uninsur", "e_age_65", "m_age_65", "e_age_17", "m_age_17",
+        "e_disabl", "m_disabl", "e_sngpnt", "m_sngpnt", "e_limeng", "m_limeng",
+        "e_minrty", "m_minrty", "e_munit", "m_munit", "e_mobile", "m_mobile",
+        "e_crowd", "m_crowd", "e_noveh", "m_noveh", "e_groupq", "m_groupq",
+        "ep_nohsdp"
     )
 )
