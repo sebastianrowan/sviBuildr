@@ -3,3 +3,6 @@
 ^LICENSE\.md$
 ^\.github$
 svi.cdc.gov*
+logo.png
+^pkgdown$
+.lintr
