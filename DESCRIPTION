@@ -1,6 +1,6 @@
 Package: sviBuildr
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Downloads the Social Vulnerability Index for use in R.
 Version: 0.1.0
 Author@R: c(
     person(
