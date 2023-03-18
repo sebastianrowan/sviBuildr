@@ -1,6 +1,6 @@
 # sviBuildr
 
-![logo](logo.png | width=20%)
+<img src=logo.png width = "250px">
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml)
