@@ -10,17 +10,21 @@
 #'   year using the most recent methodology released by the CDC (2020). If
 #'   FALSE, use the most recent methology most-recent for the given year.
 #' @param state An optional vector of states for which you are requesting data.
-#'   State names, postal codes, and FIPS codes are accepted. Defaults to NULL.
+#'   State names and FIPS codes are accepted. Defaults to NULL.
 #' @param county The county for which you are requesting data. County names and
 #'   FIPS codes are accepted. Must be combined with a value supplied to `state`.
 #'   Defaults to NULL.
 #' @param geometry if FALSE (the default), return a regular tibble of ACS data.
 #'   if TRUE, uses the tigris package to return an sf tibble with simple feature
 #'   geometry in the `geometry` column.
+#' @param include_adjunct_vars if FALSE (the default) only include the
+#'   variables used to calculate the SVI. If TRUE, include additional
+#'   adjunct variables which can be used to explain more about local areas in
+#'   certain circumstances.
 #' @param key Your Census API key. Obtain one at
 #'   \url{https://api.census.gov/data/key_signup.html}
 #' @param moe_level The confidence level of the returned margin of error.  One
-#'   of 90, 95 (the default), or 99.
+#'   of 90 (the default), 95, or 99.
 #'
 #' @return A tibble or sf tibble of the SVI and underlying data for the
 #'   specified area.
@@ -40,13 +44,11 @@
 #' @export
 get_svi <- function(geography, cache_table = FALSE, year = 2020,
                     use_2020_method = TRUE, state = NULL, county = NULL,
-                    geometry = FALSE, key = NULL, moe_level = 95) {
+                    geometry = FALSE, include_adjunct_vars = FALSE,
+                    key = NULL, moe_level = 95) {
 
     #TODO: Implement pre-2020 methodology
-    if (year != 2020) {
-        msg <- "Only SVI year 2020 currently implemented."
-        rlang::abort(msg)
-    }
+    #TODO: Add ability to download shapefiles directly from census website.
 
     vars <- c(
         "S0601_C01_001", "DP04_0001", "DP02_0001", "S1701_C01_040",
@@ -61,11 +63,19 @@ get_svi <- function(geography, cache_table = FALSE, year = 2020,
         "DP04_0078", "DP04_0079", "DP04_0058", "B26001_001", "S1701_C01_001",
         "DP03_0009P", "S2503_C01_001", "S0601_C01_033", "S2701_C05_001",
         "S0101_C02_030", "DP02_0072P", "B16005_001", "DP04_0014P", "DP04_0002",
-        "DP04_0058P", "S2802_C01_001", "S2802_C02_001", "DP05_0078",
-        "DP05_0071", "DP05_0080", "DP05_0079", "DP05_0081", "DP05_0083",
-        "DP05_0082", "DP05_0078P", "DP05_0071P", "DP05_0080P", "DP05_0079P",
-        "DP05_0081P", "DP05_0083P", "DP05_0082P"
+        "DP04_0058P"
     )
+
+    adj_vars <- c(
+        "S2802_C01_001", "S2802_C02_001", "DP05_0078", "DP05_0071",
+        "DP05_0080", "DP05_0079", "DP05_0081", "DP05_0083", "DP05_0082",
+        "DP05_0078P", "DP05_0071P", "DP05_0080P", "DP05_0079P", "DP05_0081P",
+        "DP05_0083P", "DP05_0082P"
+    )
+
+    if (include_adjunct_vars == TRUE) {
+        vars <- c(vars, adj_vars)
+    }
 
     raw_data <- tidycensus::get_acs(
         geography = geography, variables = vars, cache_table = cache_table,
@@ -75,8 +85,9 @@ get_svi <- function(geography, cache_table = FALSE, year = 2020,
     )
 
     # calculate and rename variable following SVI documentation
+    # nolint start: object_usage_linter
     svi_data <- raw_data %>%
-      dplyr::transmute(
+      dplyr::mutate(
         e_totpop = S0601_C01_001E,
         m_totpop = S0601_C01_001M,
         e_hu = DP04_0001E,
@@ -116,7 +127,7 @@ get_svi <- function(geography, cache_table = FALSE, year = 2020,
         m_limeng = sqrt(
             B16005_007M^2 + B16005_008M^2 + B16005_012M^2 + B16005_013M^2 +
             B16005_017M^2 + B16005_018M^2 + B16005_022M^2 + B16005_023M^2 +
-            B16005_029M^2 +B16005_030M^2 + B16005_034M^2 + B16005_035M^2 +
+            B16005_029M^2 + B16005_030M^2 + B16005_034M^2 + B16005_035M^2 +
             B16005_039M^2 + B16005_040M^2 + B16005_044M^2 + B16005_045M^2
         ),
         e_minrty = (
@@ -195,44 +206,200 @@ get_svi <- function(geography, cache_table = FALSE, year = 2020,
         mp_groupq = (
             sqrt(m_groupq^2 - ((ep_groupq / 100)^2 * m_totpop^2)) /
             e_totpop
-        ) * 100,
-        # Adjunct Variables
-        e_noint = (S2802_C01_001E - S2802_C02_001E),
-        m_noint = sqrt(S2802_C01_001M^2 - S2802_C02_001M^2),
-        e_afam = DP05_0078E,
-        m_afam = DP05_0078M,
-        e_hisp = DP05_0071E,
-        m_hisp = DP05_0071M,
-        e_asian = DP05_0080E,
-        m_asian = DP05_0080M,
-        e_aian = DP05_0079E,
-        m_aian = DP05_0079M,
-        e_nhpi = DP05_0081E,
-        m_nhpi = DP05_0081M,
-        e_twomore = DP05_0083E,
-        m_twomore = DP05_0083M,
-        e_otherrace = DP05_0082E,
-        m_otherrace = DP05_0082M,
-        ep_noint = (e_noint / S2802_C01_001E) * 100,
-        mp_noint = (
-            sqrt(m_noint^2 - ((ep_noint / 100)^2 * S2802_C01_001M^2)) /
-            S2802_C01_001E
-        ) * 100,
-        ep_afam = DP05_0078PE,
-        mp_afam = DP05_0078PM,
-        ep_hisp = DP05_0071PE,
-        mp_hisp = DP05_0071PM,
-        ep_asian = DP05_0080PE,
-        mp_asian = DP05_0080PM,
-        ep_aian = DP05_0079PE,
-        mp_aian = DP05_0079PM,
-        ep_nhpi = DP05_0081PE,
-        mp_nhpi = DP05_0081PM,
-        ep_twomore = DP05_0083PE,
-        mp_twomore = DP05_0083PM,
-        ep_otherrace = DP05_0082PE,
-        mp_otherrace = DP05_0082PM
+        ) * 100
       )
 
+    if (include_adjunct_vars == TRUE) {
+        svi_data <- svi_data %>%
+            dplyr::mutate(
+                e_noint = (S2802_C01_001E - S2802_C02_001E),
+                m_noint = sqrt(S2802_C01_001M^2 - S2802_C02_001M^2),
+                e_afam = DP05_0078E,
+                m_afam = DP05_0078M,
+                e_hisp = DP05_0071E,
+                m_hisp = DP05_0071M,
+                e_asian = DP05_0080E,
+                m_asian = DP05_0080M,
+                e_aian = DP05_0079E,
+                m_aian = DP05_0079M,
+                e_nhpi = DP05_0081E,
+                m_nhpi = DP05_0081M,
+                e_twomore = DP05_0083E,
+                m_twomore = DP05_0083M,
+                e_otherrace = DP05_0082E,
+                m_otherrace = DP05_0082M,
+                ep_noint = (e_noint / S2802_C01_001E) * 100,
+                mp_noint = (
+                    sqrt(m_noint^2 - ((ep_noint / 100)^2 * S2802_C01_001M^2)) /
+                    S2802_C01_001E
+                ) * 100,
+                ep_afam = DP05_0078PE,
+                mp_afam = DP05_0078PM,
+                ep_hisp = DP05_0071PE,
+                mp_hisp = DP05_0071PM,
+                ep_asian = DP05_0080PE,
+                mp_asian = DP05_0080PM,
+                ep_aian = DP05_0079PE,
+                mp_aian = DP05_0079PM,
+                ep_nhpi = DP05_0081PE,
+                mp_nhpi = DP05_0081PM,
+                ep_twomore = DP05_0083PE,
+                mp_twomore = DP05_0083PM,
+                ep_otherrace = DP05_0082PE,
+                mp_otherrace = DP05_0082PM
+            )
+    # nolint end
+    }
+}
 
+#' Download SVI data files directly from the CDC ATSDR Website.
+#'
+#' @param  geography The desired geographic scale for the SVI. Can be
+#'   "county" or "tract".
+#' @param year The year of the SVI to download. Can be 2000, 2010, 2014, 2016,
+#'   2018, or 2020 (the default). Shapefiles and county-level data are not
+#'   currently available for2000 or 2010 data.
+#' @param state The name, abbreviation, or FIPS code of the state for which the
+#'   SVI is being requested. If NULL (the default), requests data for the
+#'   entire US.
+#' @param geometry if FALSE (the default), return the SVI as tibble. If true,
+#'   downloads the SVI as a shapefile and returns an sf tibble.
+#' @return A tibble or sf tibble of the SVI and underlying data for the
+#'   US or specified state.
+#' @export
+get_svi_from_cdc <- function(geography, year, state = NULL, geometry) {
+    geography <- tolower(geography)
+    state <- tolower(state)
+
+    if (!(geography %in% c("tract", "county"))) {
+        msg <- glue::glue("Geography {geography} is not a valid input.")
+        rlang::abort(msg)
+    }
+
+    if (!is.logical(geometry)) {
+        msg <- "Expected logical value for geometry."
+        rlang::abort(msg)
+    }
+
+    if (!(year %in% c(2000, 2010, 2014, 2016, 2018, 2020))) {
+        msg <- paste0("SVI not available for year ", year)
+        rlang::abort(msg)
+    } else if (year %in% c(2000, 2010)) {
+       get_2000_2010_data(geography, year, state, geometry)
+    }
+
+    base_url <- paste0("svi.cdc.gov/Documents/Data/", year, "_SVI_Data/")
+    file_ext <- ifelse(
+        geometry == TRUE,
+        ".zip",
+        ".csv"
+    )
+
+    folder <- ifelse(
+        state == "US",
+        "",
+        ifelse(
+            geography == "county",
+            "States_Counties/",
+            "States/"
+        )
+    )
+    folder <- ifelse(
+        geometry == TRUE,
+        folder,
+        paste0("CSV/", folder)
+    )
+
+    state_name <- validate_state(state, "name_fmt")
+
+    filename <- ifelse(
+        state_name == "US",
+        paste0("SVI", year, "_US"),
+        paste0(state_name)
+    )
+    filename <- ifelse(
+        geography == "county",
+        ifelse(
+            year == 2014,
+            paste0(filename, "_CNTY"),
+            paste0(filename, "_COUNTY")
+        ),
+        filename
+    )
+
+    url <- paste0(
+        base_url,
+        folder,
+        filename,
+        file_ext
+    )
+
+    temp <- tempfile()
+    download.file(url, temp)
+
+    if (geometry == FALSE) {
+        svi_data <- readr::read_csv(temp)
+    } else {
+        temp2 <- tempfile()
+        unzip(temp, exdir = temp2)
+        svi_data <- sf::read_sf(temp2)
+    }
+
+    return(svi_data)
+}
+
+#' Separate function to get 2000 and 2010 data from the CDC as these
+#'   datasets aren't stored in the same scheme as other years.
+#' @param geography Passed from parent function. Only tract accepted.
+#' @param year The year of the SVI to download. Can be 2000 or 2010.
+#' @param state The name, abbreviation, or FIPS code of the state for which the
+#'   SVI is being requested. If NULL (the default), requests data for the
+#'   entire US.
+#' @param geometry if FALSE (the default), return the SVI as tibble. If true,
+#'   downloads the SVI as a shapefile and returns an sf tibble.
+#' @return A tibble or sf tibble of the SVI and underlying data for the
+#'   US or specified state.
+get_2000_2010_data <- function(geography, year, state, geometry) {
+
+    base_url <- paste0("svi.cdc.gov/Documents/Data/", year, "_SVI_Data/CSV/")
+
+    if (geography == "county") {
+        msg <- "County data not available for 2000 or 2010 data."
+        rlang::abort(msg)
+    }
+
+    if (geometry == TRUE) {
+    #TODO: download correct tiger shapefile and then join svi data.
+        msg <- "Shapefiles not available for 2000 or 2010 data."
+        warning(msg)
+    }
+
+    file_ext <- ".csv"
+
+    folder <- ifelse(
+        state == "US",
+        "",
+        "States/"
+    )
+
+    state_name <- validate_state(state, "name_fmt")
+
+    filename <- ifelse(
+        state_name == "US",
+        paste0("SVI", year, "_US"),
+        paste0(state_name)
+    )
+
+    url <- paste0(
+        base_url,
+        folder,
+        filename,
+        file_ext
+    )
+
+    temp <- tempfile()
+    download.file(url, temp)
+    svi_data <- readr::read_csv(temp)
+
+    return(svi_data)
 }
