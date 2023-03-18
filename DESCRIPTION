@@ -11,7 +11,7 @@ Author@R: c(
 URL: https://github.com/sebastianrowan/sviBuildr
 Description: R package to download the required census data and calculate the 
     social vulnerability index (SVI) according to the methodology published by
-    the US CDC's Agency for Toxic Substances and Disease Registry (ADTSR)
+    the US CDC's Agency for Toxic Substances and Disease Registry (ATSDR)
     (<https://www.atsdr.cdc.gov/placeandhealth/svi/index.html>). This package
     allows users to calculate the SVI for any study region within the US.
     sviBuildr utilizes the tidycensus package
@@ -24,11 +24,14 @@ Roxygen: list(markdown = TRUE)
 Imports: 
     cli,
     dplyr,
+    magrittr,
     glue,
     lifecycle,
     rlang,
     sf,
     stringr,
+    tidyselect,
+    tigris,
     tidycensus,
     withr
 RoxygenNote: 7.2.2

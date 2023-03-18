@@ -3,7 +3,8 @@
 \name{validate_state}
 \alias{validate_state}
 \title{Utility functions for use in other functions
-Called to check to see if "state" is a FIPS code, full name or abbreviation.}
+Called to check to see if "state" is a FIPS code, full name or abbreviation.
+modified from function in tidycensus by Kyle Walker}
 \usage{
 validate_state(state, identifier)
 }
@@ -17,6 +18,7 @@ abbreviation, or name.}
 a valid state FIPS code or chosen identifier
 }
 \description{
-returns NULL if input is NULL
-returns error if input is not a valid FIPS code
+Utility functions for use in other functions
+Called to check to see if "state" is a FIPS code, full name or abbreviation.
+modified from function in tidycensus by Kyle Walker
 }
