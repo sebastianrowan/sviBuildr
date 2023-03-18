@@ -344,6 +344,7 @@ get_svi <- function(geography, cache_table = FALSE, year = 2020,
             f_theme1 + f_theme2 + f_theme3 + f_theme4
         )
       )
+    return(svi_data)
 }
 
 #' Download SVI data files directly from the CDC ATSDR Website.
