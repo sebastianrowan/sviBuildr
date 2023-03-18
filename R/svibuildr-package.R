@@ -20,6 +20,7 @@
 #' @import tidyselect
 #' @import tigris
 #' @import withr
+#' @import readr
 #' @importFrom dplyr ntile
 #' @importFrom glue glue
 #' @importFrom lifecycle deprecated

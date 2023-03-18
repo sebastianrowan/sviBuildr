@@ -23,6 +23,7 @@ Roxygen: list(markdown = TRUE)
 Imports: 
     cli,
     dplyr,
+    readr,
     magrittr,
     glue,
     lifecycle,
