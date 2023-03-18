@@ -4,14 +4,14 @@
 \name{sviBuildr}
 \alias{sviBuildr}
 \title{Return a social vulnerability index for a specified region according to the
-CDC ADSTR methodology using the tidycensus package developed by Kyle Walker.}
+CDC ATSDR methodology using the tidycensus package developed by Kyle Walker.}
 \description{
 This packages uses US Census Bureau data but is neither endorsed nor
 supported by the US Census Bureau.
 }
 \details{
 This package used the SVI methodology published by the CDC Agency for
-Toxic Substances and Disease Registry (ADSTR) but is neither endorsed nor
+Toxic Substances and Disease Registry (ATSDR) but is neither endorsed nor
 supported by the ADSTR.
 }
 \author{

@@ -41,6 +41,7 @@
 #'   coord_sf(crs = 4258) +
 #'   scale_fill_viridis()
 #' }
+#' @importFrom dplyr ntile
 #' @export
 get_svi <- function(geography, cache_table = FALSE, year = 2020,
                     use_2020_method = TRUE, state = NULL, county = NULL,
@@ -273,8 +274,76 @@ get_svi <- function(geography, cache_table = FALSE, year = 2020,
     # nolint end
     }
 
+    # calclate variable percentiles and themes
+    svi_data <- svi_data %>%
+        mutate(
+            epl_pov150 = ntile(ep_pov150, 100) / 100,
+            epl_unemp = ntile(ep_unemp, 100) / 100,
+            epl_hburd = ntile(ep_hburd, 100) / 100,
+            epl_nohsdp = ntile(ep_nohsdp, 100) / 100,
+            epl_uninsur = ntile(ep_uninsur, 100) / 100,
+            spl_theme1 = (
+                epl_pov150 + epl_unemp + epl_hburd + epl_nohsdp + epl_uninsur
+            ),
+            rpl_theme1 = ntile(spl_theme1, 100) / 100,
+            epl_age65 = ntile(ep_age65, 100) / 100,
+            epl_age17 = ntile(ep_age17, 100) / 100,
+            epl_disabl = ntile(ep_disabl, 100) / 100,
+            epl_sngpnt = ntile(ep_sngpnt, 100) / 100,
+            epl_limeng = ntile(ep_limeng, 100) / 100,
+            spl_theme2 = (
+                epl_age65 + epl_age17 + epl_disabl + epl_sngpnt + epl_limeng
+            ),
+            rpl_theme2 = ntile(spl_theme2, 100) / 100,
+            epl_minrty = ntile(ep_minrty, 100) / 100,
+            spl_theme3 = epl_minrty,
+            rpl_theme3 = ntile(spl_theme3, 100) / 100,
+            epl_munit = ntile(ep_munit, 100) / 100,
+            epl_mobile = ntile(ep_mobile, 100) / 100,
+            epl_crowd = ntile(ep_crowd, 100) / 100,
+            epl_noveh = ntile(ep_noveh, 100) / 100,
+            epl_groupq = ntile(ep_groupq, 100) / 100,
+            spl_theme4 = (
+                epl_munit + epl_mobile + epl_crowd +epl_noveh +epl_groupq
+            ),
+            rpl_theme4 = ntile(spl_theme4, 100) / 100,
+            spl_themes = (
+                spl_theme1 + spl_theme2 + spl_theme3 + spl_theme4
+            ),
+            rpl_themes = ntile(spl_themes, 100) / 100
+        )
 
+    vars <- c(
+        "epl_pov150", "epl_unemp", "epl_hburd", "epl_nohsdp", "epl_uninsur",
+        "epl_age65", "epl_age17", "epl_disabl", "epl_sngpnt", "epl_limeng",
+        "epl_minrty", "epl_munit", "epl_mobile", "epl_crowd", "epl_noveh",
+        "epl_groupq"
+    )
 
+    flags <- c(
+        "f_pov150", "f_unemp", "f_hburd", "f_nohsdp", "f_uninsur",
+        "f_age65", "f_age17", "f_disabl", "f_sngpnt", "f_limeng",
+        "f_minrty", "f_munit", "f_mobile", "f_crowd", "f_noveh",
+        "f_groupq"
+    )
+    # calculate flags
+    svi_data[, flags] <- svi_data[, vars] >= 0.90
+    svi_data <- svi_data %>%
+      mutate(
+        f_theme1 = (
+            f_pov150 + f_unemp + f_hburd + f_nohsdp + f_uninsur
+        ),
+        f_theme2 = (
+            f_age65 + f_age17 + f_disabl + f_sngpnt + f_limeng
+        ),
+        f_theme3 = f_minrty,
+        f_theme4 = (
+            f_munit + f_mobile + f_crowd + f_noveh + f_groupq
+        ),
+        f_total = (
+            f_theme1 + f_theme2 + f_theme3 + f_theme4
+        )
+      )
 }
 
 #' Download SVI data files directly from the CDC ATSDR Website.
