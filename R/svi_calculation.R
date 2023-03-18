@@ -430,13 +430,13 @@ get_svi_from_cdc <- function(geography, year, state = NULL, geometry) {
     )
 
     temp <- tempfile()
-    download.file(url, temp)
+    utils::download.file(url, temp)
 
     if (geometry == FALSE) {
         svi_data <- readr::read_csv(temp)
     } else {
         temp2 <- tempfile()
-        unzip(temp, exdir = temp2)
+        utils::unzip(temp, exdir = temp2)
         svi_data <- sf::read_sf(temp2)
     }
 
@@ -493,7 +493,7 @@ get_2000_2010_data <- function(geography, year, state, geometry) {
     )
 
     temp <- tempfile()
-    download.file(url, temp)
+    utils::download.file(url, temp)
     svi_data <- readr::read_csv(temp)
 
     return(svi_data)

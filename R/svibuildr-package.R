@@ -8,23 +8,21 @@
 #' Toxic Substances and Disease Registry (ATSDR) but is neither endorsed nor
 #' supported by the ADSTR.
 #'
-## usethis namespace: start
 #' @author Sebastian Rowan
 #' @name sviBuildr
 #' @docType package
 #' @import cli
-#' @import withr
-#' @import magrittr
-#' @importFrom magrittr %>%
 #' @import dplyr
-#' @importFrom dplyr ntile
+#' @import magrittr
+#' @import sf
 #' @import stringr
+#' @import tidycensus
+#' @import tidyselect
+#' @import tigris
+#' @import withr
+#' @importFrom dplyr ntile
 #' @importFrom glue glue
 #' @importFrom lifecycle deprecated
-#' @importFrom rlang inform abort arg_match sym
-#' @import tidyselect
-#' @import sf
-#' @import tigris
-#' @import tidycensus
-## usethis namespace: end
+#' @importFrom magrittr %>%
+#' @importFrom rlang inform abort arg_match
 NULL
