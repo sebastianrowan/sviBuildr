@@ -48,7 +48,28 @@ get_svi <- function(geography, cache_table = FALSE, year = 2020,
                     key = NULL, moe_level = 95) {
 
     #TODO: Implement pre-2020 methodology
-    #TODO: Add ability to download shapefiles directly from census website.
+    if (year != 2020) {
+        msg <- "SVI calculation currently only available for year 2020. Use
+        get_svi_from_cdc() instead."
+        rlang::abort(msg)
+    }
+    geography <- tolower(geography)
+    state <- tolower(state)
+
+    if (!(geography %in% c("tract", "county"))) {
+        msg <- glue::glue("Geography {geography} is not a valid input.")
+        rlang::abort(msg)
+    }
+
+    if (!is.logical(geometry)) {
+        msg <- "Expected logical value for geometry."
+        rlang::abort(msg)
+    }
+
+    if (!moe_level %in% c(90, 95, 99)) {
+        msg <- "Invalid moe_level."
+        rlang::abort(msg)
+    }
 
     vars <- c(
         "S0601_C01_001", "DP04_0001", "DP02_0001", "S1701_C01_040",
@@ -87,6 +108,7 @@ get_svi <- function(geography, cache_table = FALSE, year = 2020,
     # calculate and rename variable following SVI documentation
     # nolint start: object_usage_linter
     svi_data <- raw_data %>%
+      dplyr::filter(S0601_C01_001E > 0) %>%
       dplyr::mutate(
         e_totpop = S0601_C01_001E,
         m_totpop = S0601_C01_001M,
@@ -116,7 +138,7 @@ get_svi <- function(geography, cache_table = FALSE, year = 2020,
         m_age_17 = B09001_001M,
         e_disabl = DP02_0072E,
         m_disabl = DP02_0072M,
-        e_sngpnt = (B11012_010E + B11012_015E),
+        e_sngpnt = (B11012_010E + B11012_015E), # lookout for issues with NA  values here
         m_sngpnt = sqrt(B11012_010M^2 + B11012_015M^2),
         e_limeng = (
             B16005_007E + B16005_008E + B16005_012E + B16005_013E +
@@ -250,6 +272,9 @@ get_svi <- function(geography, cache_table = FALSE, year = 2020,
             )
     # nolint end
     }
+
+
+
 }
 
 #' Download SVI data files directly from the CDC ATSDR Website.
