@@ -39,3 +39,6 @@ sviBuilr can be installed from this repositority using:
 install.packages('devtools')
 devtools::install_github('sebastianrowan/sviBuildr')
 ```
+
+
+## References

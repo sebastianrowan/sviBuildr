@@ -60,6 +60,8 @@ devtools::install_github('sebastianrowan/sviBuildr')
 ```
 ````
 
+## References
+
 <div id="refs" class="references csl-bib-body">
 
 <div id="ref-cdc-atsdr_cdcatsdr_2022" class="csl-entry">
