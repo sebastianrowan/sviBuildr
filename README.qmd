@@ -33,7 +33,7 @@ Note: This package is not endorsed or developed by the CDC/ATSDR nor has it unde
 
 ## Installation
 
-sviBuilr can be installed from this repositority using:
+sviBuildr can be installed from this repositority using:
 
 ```{{r}}
 install.packages('devtools')
