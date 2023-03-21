@@ -13,7 +13,7 @@
 #' @return A tibble or sf tibble of the SVI and underlying data for the
 #'   US or specified state.
 #' @export
-get_svi_from_cdc <- function(geography, year, state = NULL, geometry) {
+get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
   geography <- tolower(geography)
   state <- tolower(state)
 
@@ -117,7 +117,7 @@ get_2000_2010_data <- function(geography, year, state, geometry) {
   if (geometry == TRUE) {
     #TODO: download correct tiger shapefile and then join svi data.
     msg <- "Shapefiles not available for 2000 or 2010 data."
-    warning(msg)
+    rlang::abort(msg)
   }
 
   file_ext <- ".csv"

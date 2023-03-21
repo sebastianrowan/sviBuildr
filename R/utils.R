@@ -7,10 +7,11 @@
 #' @param identifier indicates whether to return state fips (default),
 #'   abbreviation, or name.
 #' @return a valid state FIPS code or chosen identifier
-validate_state <- function(state, identifier) {
+validate_state <- function(state = NULL, identifier) {
 
   if (is.null(state)) {
-    return(NULL)
+    msg <- "No state specified."
+    rlang::abort(msg)
   }
 
   if (!(identifier %in% c("fips", "abb", "name", "name_fmt"))) {
@@ -20,7 +21,9 @@ validate_state <- function(state, identifier) {
 
   state <- tolower(stringr::str_trim(state)) # forgive white space
 
-  if (grepl("^[[:digit:]]+$", state)) { # we probably have FIPS
+  if (state == "us") {
+    return("US")
+  } else if (grepl("^[[:digit:]]+$", state)) { # we probably have FIPS
 
     if (state %in% fips_state_table$fips) {
       id <- fips_state_table %>%
