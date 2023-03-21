@@ -5,8 +5,6 @@ bibliography: README_files/references.bib
 csl: README_files/ieee.csl
 ---
 
-# sviBuildr
-
 <img src=logo.png width = "250px">
 
 <!-- badges: start -->

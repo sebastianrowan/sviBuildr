@@ -1,8 +1,6 @@
 sviBuildr
 ================
 
-# sviBuildr
-
 <img src=logo.png width = "250px">
 
 <!-- badges: start -->
@@ -51,7 +49,7 @@ web page at https://www.atsdr.cdc.gov/placeandhealth/svi/index.html.
 
 ## Installation
 
-sviBuilr can be installed from this repositority using:
+sviBuildr can be installed from this repositority using:
 
 ```` markdown
 ```{r}
