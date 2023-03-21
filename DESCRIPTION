@@ -16,7 +16,7 @@ Description: R package to download the required census data and calculate the
     sviBuildr utilizes the tidycensus package
     (<https://github.com/walkerke/tidycensus>) to interface with the US Census
     Bureau APIs. 
-License: MIT + file LICENSE
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
