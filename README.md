@@ -4,9 +4,10 @@ sviBuildr
 <img src=logo.png width = "250px">
 
 <!-- badges: start -->
+
 [![R-CMD-check](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml)
 [![pkgdown](https://github.com/sebastianrowan/sviBuildr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/pkgdown.yaml)
-[![lifecycle](https://github.com/sebastianrowan/sviBuildr/blob/master/man/figures/lifecycle-experimental.svg)](https://github.com/sebastianrowan/sviBuildr)
+[![lifecycle](https://github.com/sebastianrowan/sviBuildr/man/figures/lifecycle-experimental.svg)](https://github.com/sebastianrowan/sviBuildr)
 <!-- badges: end -->
 
 `sviBuildr` is an R package that allows users to download or construct
@@ -25,15 +26,13 @@ study area consisting of three states in which SVI scores are calculated
 by comparing values across counties in just the three states rather than
 across all 50 states:
 
-```` markdown
-```{r}
+```r
 library(sviBuildr)
 
 tristate_svi <- calculate_svi(
     geography = "county", year = 2020, state = c("ME", "NH", "VT")
 )
 ```
-````
 
 Currently, calculating the SVI is only available for the year 2020 using
 the updated method published by the CDC/ATSDR \[1\].
@@ -52,12 +51,10 @@ web page at https://www.atsdr.cdc.gov/placeandhealth/svi/index.html.
 
 sviBuildr can be installed from this repositority using:
 
-```` markdown
-```{r}
+```r
 install.packages('devtools')
 devtools::install_github('sebastianrowan/sviBuildr')
 ```
-````
 
 ## References
 
