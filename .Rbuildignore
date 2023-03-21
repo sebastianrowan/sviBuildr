@@ -9,3 +9,5 @@ logo.png
 ^pkgdown$
 .lintr
 README.qmd
+^_pkgdown\.yml$
+^docs$
