@@ -9,6 +9,8 @@ csl: README_files/ieee.csl
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml)
+
+[![pkgdown](https://github.com/sebastianrowan/sviBuildr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/pkgdown.yaml)
 <!-- badges: end -->
 
 `sviBuildr` is an R package that allows users to download or construct Social Vulnerability Index datasets as tidyverse dataframes or as simple features dataframes for spatial analyses. Users can choose to download precompiled datasets from the [CDC](https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html) or compile the SVI with data from the US Census Bureau's American Community Survey. 
