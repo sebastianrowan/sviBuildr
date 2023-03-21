@@ -7,7 +7,8 @@ Authors@R: person(
         "Rowan",
         email="sebastian.rowan@unh.edu",
         role=c("aut", "cre"))
-URL: https://github.com/sebastianrowan/sviBuildr
+URL: https://github.com/sebastianrowan/sviBuildr,
+    https://sebastianrowan.github.io/sviBuildr/
 Description: R package to download the required census data and calculate the 
     social vulnerability index (SVI) according to the methodology published by
     the US CDC's Agency for Toxic Substances and Disease Registry (ATSDR)

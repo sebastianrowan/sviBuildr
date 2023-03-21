@@ -2,5 +2,8 @@ pandoc: 3.1.1
 pkgdown: 2.0.6
 pkgdown_sha: ~
 articles: {}
-last_built: 2023-03-21T17:42Z
+last_built: 2023-03-21T18:14Z
+urls:
+  reference: https://sebastianrowan.github.io/sviBuildr/reference
+  article: https://sebastianrowan.github.io/sviBuildr/articles
 
