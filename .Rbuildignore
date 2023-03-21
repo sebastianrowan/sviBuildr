@@ -8,3 +8,4 @@ svi.cdc.gov*
 logo.png
 ^pkgdown$
 .lintr
+README.qmd

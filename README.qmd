@@ -1,8 +1,8 @@
 ---
 title: "sviBuildr"
 format: gfm
-bibliography: man/references.bib
-csl: man/ieee.csl
+bibliography: README_files/references.bib
+csl: README_files/ieee.csl
 ---
 
 # sviBuildr
