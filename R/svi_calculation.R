@@ -46,7 +46,7 @@
 calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
                     use_2020_method = TRUE, state = NULL, county = NULL,
                     geometry = FALSE, include_adjunct_vars = FALSE,
-                    key = NULL, moe_level = 95) {
+                    key = NULL, moe_level = 90) {
 
     #TODO: Implement pre-2020 methodology
     if (year != 2020) {
@@ -60,6 +60,17 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
     if (!(geography %in% c("tract", "county"))) {
         msg <- glue::glue("Geography {geography} is not a valid input.")
         rlang::abort(msg)
+    }
+
+    if (is.null(state)) {
+      msg <- "No state specified"
+      rlang::abort(msg)
+    }
+
+    if (sum(tolower(state) == "us") > 0) {
+      msg <- "Calculating US svi not currently supported. Try using
+      get_svi_from_cdc()"
+      rlang::abort(msg)
     }
 
     if (!is.logical(geometry)) {
@@ -229,7 +240,7 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
         mp_groupq = (
             sqrt(m_groupq^2 - ((ep_groupq / 100)^2 * m_totpop^2)) /
             e_totpop
-        ) * 100
+        ) * 100,
       )
 
     if (include_adjunct_vars == TRUE) {
@@ -269,7 +280,7 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
                 ep_twomore = DP05_0083PE,
                 mp_twomore = DP05_0083PM,
                 ep_otherrace = DP05_0082PE,
-                mp_otherrace = DP05_0082PM
+                mp_otherrace = DP05_0082PM,
             )
     # nolint end
     }
@@ -310,7 +321,7 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
             spl_themes = (
                 spl_theme1 + spl_theme2 + spl_theme3 + spl_theme4
             ),
-            rpl_themes = ntile(spl_themes, 100) / 100
+            rpl_themes = ntile(spl_themes, 100) / 100,
         )
 
     vars <- c(
@@ -344,5 +355,6 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
             f_theme1 + f_theme2 + f_theme3 + f_theme4
         )
       )
+    #TODO: tidyselect only final SVI columns
     return(svi_data)
 }

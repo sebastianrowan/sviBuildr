@@ -10,7 +10,7 @@
 validate_state <- function(state = NULL, identifier) {
 
   if (is.null(state)) {
-    msg <- "No state specified."
+    msg <- "No state specified"
     rlang::abort(msg)
   }
 
