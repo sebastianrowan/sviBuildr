@@ -324,7 +324,7 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
             rpl_themes = ntile(spl_themes, 100) / 100,
         )
 
-    vars <- c(
+    flag_vars <- c(
         "epl_pov150", "epl_unemp", "epl_hburd", "epl_nohsdp", "epl_uninsur",
         "epl_age65", "epl_age17", "epl_disabl", "epl_sngpnt", "epl_limeng",
         "epl_minrty", "epl_munit", "epl_mobile", "epl_crowd", "epl_noveh",
@@ -337,8 +337,9 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
         "f_minrty", "f_munit", "f_mobile", "f_crowd", "f_noveh",
         "f_groupq"
     )
+
     # calculate flags
-    svi_data[, flags] <- svi_data[, vars] >= 0.90
+    svi_data[, flags] <- svi_data[, flag_vars] >= 0.90
     svi_data <- svi_data %>%
       mutate(
         f_theme1 = (
@@ -354,7 +355,8 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
         f_total = (
             f_theme1 + f_theme2 + f_theme3 + f_theme4
         )
-      )
-    #TODO: tidyselect only final SVI columns
+      ) %>%
+      select(matches("^([emsrf][p|pl]*_)")) # only include svi variables
+
     return(svi_data)
 }
