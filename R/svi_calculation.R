@@ -187,7 +187,7 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
         mp_nohsdp = S0601_C01_033M,
         ep_uninsur = S2701_C05_001E,
         mp_uninsur = S2701_C05_001M,
-        ep_age_66 = S0101_C02_030E,
+        ep_age65 = S0101_C02_030E,
         mp_age65 = S0101_C02_030M,
         ep_age17 = (e_age_17 / e_totpop) * 100,
         mp_age17 = (
