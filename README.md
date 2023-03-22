@@ -28,7 +28,7 @@ across all 50 states:
 ```r
 library(sviBuildr)
 
-tristate_svi <- calculate_svi(
+tri_state_svi <- calculate_svi(
     geography = "county", year = 2020, state = c("ME", "NH", "VT")
 )
 ```
