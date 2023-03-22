@@ -6,7 +6,7 @@
 Called to check to see if "state" is a FIPS code, full name or abbreviation.
 modified from function in tidycensus by Kyle Walker}
 \usage{
-validate_state(state, identifier)
+validate_state(state = NULL, identifier)
 }
 \arguments{
 \item{state}{state name or fips code to be validated}

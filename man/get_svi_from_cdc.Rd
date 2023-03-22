@@ -4,7 +4,7 @@
 \alias{get_svi_from_cdc}
 \title{Download SVI data files directly from the CDC ATSDR Website.}
 \usage{
-get_svi_from_cdc(geography, year, state = NULL, geometry)
+get_svi_from_cdc(geography, year, state = NULL, geometry = FALSE)
 }
 \arguments{
 \item{geography}{The desired geographic scale for the SVI. Can be

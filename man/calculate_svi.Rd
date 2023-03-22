@@ -15,7 +15,7 @@ calculate_svi(
   geometry = FALSE,
   include_adjunct_vars = FALSE,
   key = NULL,
-  moe_level = 95
+  moe_level = 90
 )
 }
 \arguments{
