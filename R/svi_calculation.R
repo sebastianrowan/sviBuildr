@@ -356,7 +356,9 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
             f_theme1 + f_theme2 + f_theme3 + f_theme4
         )
       ) %>%
-      select(matches("^([emsrf][p|pl]*_)")) # only include svi variables
+      select(
+        matches("^([emsrf][p|pl]*_)")
+      ) # only include svi variables
 
     return(svi_data)
 }
