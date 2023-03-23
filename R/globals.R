@@ -36,7 +36,11 @@ utils::globalVariables(
         "e_disabl", "m_disabl", "e_sngpnt", "m_sngpnt", "e_limeng", "m_limeng",
         "e_minrty", "m_minrty", "e_munit", "m_munit", "e_mobile", "m_mobile",
         "e_crowd", "m_crowd", "e_noveh", "m_noveh", "e_groupq", "m_groupq",
-        "ep_nohsdp", "f_theme1", "f_theme2", "f_theme3", "f_theme4"
+        "ep_nohsdp", "f_theme1", "f_theme2", "f_theme3", "f_theme4",
+        "f_pov150", "f_unemp", "f_hburd", "f_nohsdp", "f_uninsur",
+        "f_age65", "f_age17", "f_disabl", "f_sngpnt", "f_limeng",
+        "f_minrty", "f_munit", "f_mobile", "f_crowd", "f_noveh",
+        "f_groupq"
     )
 )
 

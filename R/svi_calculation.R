@@ -25,6 +25,7 @@
 #'   \url{https://api.census.gov/data/key_signup.html}
 #' @param moe_level The confidence level of the returned margin of error.  One
 #'   of 90 (the default), 95, or 99.
+#' @param ... Other keyword arguments
 #'
 #' @return A tibble or sf tibble of the SVI and underlying data for the
 #'   specified area.
@@ -41,12 +42,12 @@
 #'   coord_sf(crs = 4258) +
 #'   scale_fill_viridis()
 #' }
-#' @importFrom dplyr ntile
+#' @import dplyr
 #' @export
 calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
                     use_2020_method = TRUE, state = NULL, county = NULL,
                     geometry = FALSE, include_adjunct_vars = FALSE,
-                    key = NULL, moe_level = 90) {
+                    key = NULL, moe_level = 90, ...) {
 
     #TODO: Implement pre-2020 methodology
     if (year != 2020) {
@@ -109,11 +110,12 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
     if (include_adjunct_vars == TRUE) {
         vars <- c(vars, adj_vars)
     }
-
+    #TODO: turn on geo_vars once bug is fixed in tidycensus
+    # https://github.com/walkerke/tidycensus/pull/511
     raw_data <- tidycensus::get_acs(
         geography = geography, variables = vars, cache_table = cache_table,
         year = year, output = "wide", state = state, county = county,
-        geometry = geometry, keep_geo_vars = TRUE, key = key,
+        geometry = geometry, keep_geo_vars = FALSE, key = key,
         moe_level = moe_level, survey = "acs5"
     )
 
@@ -282,48 +284,48 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
                 ep_otherrace = DP05_0082PE,
                 mp_otherrace = DP05_0082PM,
             )
-    # nolint end
+
     }
 
-    # calclate variable percentiles and themes
+    # calclate variable percepercent_ranks and themes
     svi_data <- svi_data %>%
         mutate(
-            epl_pov150 = ntile(ep_pov150, 100) / 100,
-            epl_unemp = ntile(ep_unemp, 100) / 100,
-            epl_hburd = ntile(ep_hburd, 100) / 100,
-            epl_nohsdp = ntile(ep_nohsdp, 100) / 100,
-            epl_uninsur = ntile(ep_uninsur, 100) / 100,
+            epl_pov150 = percent_rank(ep_pov150),
+            epl_unemp = percent_rank(ep_unemp),
+            epl_hburd = percent_rank(ep_hburd),
+            epl_nohsdp = percent_rank(ep_nohsdp),
+            epl_uninsur = percent_rank(ep_uninsur),
             spl_theme1 = (
                 epl_pov150 + epl_unemp + epl_hburd + epl_nohsdp + epl_uninsur
             ),
-            rpl_theme1 = ntile(spl_theme1, 100) / 100,
-            epl_age65 = ntile(ep_age65, 100) / 100,
-            epl_age17 = ntile(ep_age17, 100) / 100,
-            epl_disabl = ntile(ep_disabl, 100) / 100,
-            epl_sngpnt = ntile(ep_sngpnt, 100) / 100,
-            epl_limeng = ntile(ep_limeng, 100) / 100,
+            rpl_theme1 = percent_rank(spl_theme1),
+            epl_age65 = percent_rank(ep_age65),
+            epl_age17 = percent_rank(ep_age17),
+            epl_disabl = percent_rank(ep_disabl),
+            epl_sngpnt = percent_rank(ep_sngpnt),
+            epl_limeng = percent_rank(ep_limeng),
             spl_theme2 = (
                 epl_age65 + epl_age17 + epl_disabl + epl_sngpnt + epl_limeng
             ),
-            rpl_theme2 = ntile(spl_theme2, 100) / 100,
-            epl_minrty = ntile(ep_minrty, 100) / 100,
+            rpl_theme2 = percent_rank(spl_theme2),
+            epl_minrty = percent_rank(ep_minrty),
             spl_theme3 = epl_minrty,
-            rpl_theme3 = ntile(spl_theme3, 100) / 100,
-            epl_munit = ntile(ep_munit, 100) / 100,
-            epl_mobile = ntile(ep_mobile, 100) / 100,
-            epl_crowd = ntile(ep_crowd, 100) / 100,
-            epl_noveh = ntile(ep_noveh, 100) / 100,
-            epl_groupq = ntile(ep_groupq, 100) / 100,
+            rpl_theme3 = percent_rank(spl_theme3),
+            epl_munit = percent_rank(ep_munit),
+            epl_mobile = percent_rank(ep_mobile),
+            epl_crowd = percent_rank(ep_crowd),
+            epl_noveh = percent_rank(ep_noveh),
+            epl_groupq = percent_rank(ep_groupq),
             spl_theme4 = (
                 epl_munit + epl_mobile + epl_crowd + epl_noveh + epl_groupq
             ),
-            rpl_theme4 = ntile(spl_theme4, 100) / 100,
+            rpl_theme4 = percent_rank(spl_theme4),
             spl_themes = (
                 spl_theme1 + spl_theme2 + spl_theme3 + spl_theme4
             ),
-            rpl_themes = ntile(spl_themes, 100) / 100,
+            rpl_themes = percent_rank(spl_themes),
         )
-
+        # nolint end
     flag_vars <- c(
         "epl_pov150", "epl_unemp", "epl_hburd", "epl_nohsdp", "epl_uninsur",
         "epl_age65", "epl_age17", "epl_disabl", "epl_sngpnt", "epl_limeng",
@@ -331,17 +333,16 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
         "epl_groupq"
     )
 
-    flags <- c(
-        "f_pov150", "f_unemp", "f_hburd", "f_nohsdp", "f_uninsur",
-        "f_age65", "f_age17", "f_disabl", "f_sngpnt", "f_limeng",
-        "f_minrty", "f_munit", "f_mobile", "f_crowd", "f_noveh",
-        "f_groupq"
-    )
-
     # calculate flags
-    svi_data[, flags] <- svi_data[, flag_vars] >= 0.90
     svi_data <- svi_data %>%
-      mutate(
+      dplyr::mutate(across(
+        all_of(flag_vars),
+        ~ .x >= 0.9,
+        .names = "f{substring(.col, 4)}"
+      ))
+
+    svi_data <- svi_data %>%
+      dplyr::mutate(
         f_theme1 = (
             f_pov150 + f_unemp + f_hburd + f_nohsdp + f_uninsur
         ),
@@ -356,8 +357,8 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
             f_theme1 + f_theme2 + f_theme3 + f_theme4
         )
       ) %>%
-      select(
-        matches("^([emsrf][p|pl]*_)")
+      dplyr::select(
+        dplyr::matches("GEOID|NAME|^([emsrf][p|pl]*_)")
       ) # only include svi variables
 
     return(svi_data)

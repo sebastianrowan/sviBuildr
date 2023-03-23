@@ -15,7 +15,8 @@ calculate_svi(
   geometry = FALSE,
   include_adjunct_vars = FALSE,
   key = NULL,
-  moe_level = 90
+  moe_level = 90,
+  ...
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ certain circumstances.}
 
 \item{moe_level}{The confidence level of the returned margin of error.  One
 of 90 (the default), 95, or 99.}
+
+\item{...}{Other keyword arguments}
 }
 \value{
 A tibble or sf tibble of the SVI and underlying data for the
