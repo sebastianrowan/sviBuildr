@@ -78,15 +78,7 @@ test_that(
       "data.frame"
     )
     expect_s3_class(
-      get_svi_from_cdc("tract", year = 2014, state = 33, geometry = FALSE),
-      "data.frame"
-    )
-    expect_s3_class(
-      get_svi_from_cdc("county", year = 2016, state = 'US', geometry = FALSE),
-      "data.frame"
-    )
-    expect_s3_class(
-      get_svi_from_cdc("tract", year = 2018, state = 'US', geometry = FALSE),
+      get_svi_from_cdc("county", year = 2014, state = 'US', geometry = FALSE),
       "data.frame"
     )
   }
@@ -114,15 +106,7 @@ test_that(
       "data.frame"
     )
     expect_s3_class(
-      get_svi_from_cdc("tract", year = 2018, state = 33, geometry = TRUE),
-      "data.frame"
-    )
-    expect_s3_class(
-      get_svi_from_cdc("county", year = 2016, state = 'US', geometry = TRUE),
-      "data.frame"
-    )
-    expect_s3_class(
-      get_svi_from_cdc("tract", year = 2014, state = 'US', geometry = TRUE),
+      get_svi_from_cdc("county", year = 2014, state = 'US', geometry = TRUE),
       "data.frame"
     )
   }

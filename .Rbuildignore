@@ -11,3 +11,4 @@ logo.png
 README.qmd
 ^_pkgdown\.yml$
 ^docs$
+^codecov\.yml$
