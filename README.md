@@ -6,7 +6,7 @@
 
 [![R-CMD-check](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml)
 [![pkgdown](https://github.com/sebastianrowan/sviBuildr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/pkgdown.yaml)
-[![lifecycle](https://raw.githubusercontent.com/sebastianrowan/sviBuildr/86f4c909318408a4c26867a2e7477c5c518c199c/man/figures/lifecycle-experimental.svg)](https://github.com/sebastianrowan/sviBuildr)
+[![lifecycle](https://raw.githubusercontent.com/sebastianrowan/sviBuildr/86f4c909318408a4c26867a2e7477c5c518c199c/man/figures/lifecycle-experimental.svg)](https://github.com/sebastianrowan/sviBuildr)[![test-coverage](https://github.com/sebastianrowan/sviBuildr/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
 `sviBuildr` is an R package that allows users to download or construct
