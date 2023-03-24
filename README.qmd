@@ -8,9 +8,9 @@ csl: README_files/ieee.csl
 <img src=logo.png width = "250px">
 
 <!-- badges: start -->
+[![lifecycle](https://raw.githubusercontent.com/sebastianrowan/sviBuildr/86f4c909318408a4c26867a2e7477c5c518c199c/man/figures/lifecycle-experimental.svg)](https://github.com/sebastianrowan/sviBuildr)
 [![R-CMD-check](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml)
 [![pkgdown](https://github.com/sebastianrowan/sviBuildr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/pkgdown.yaml)
-[![lifecycle](https://github.com/sebastianrowan/sviBuildr/man/figures/lifecycle-experimental.svg)](https://github.com/sebastianrowan/sviBuildr)
 [![Codecov test coverage](https://codecov.io/gh/sebastianrowan/sviBuildr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/sebastianrowan/sviBuildr?branch=master)
 <!-- badges: end -->
 
