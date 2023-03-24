@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://sebastianrowan.github.io/sviBuildr/404.html</loc>
+    <loc>https://sebastianrowan.github.io/svibuildr/404.html</loc>
   </url>
   <url>
-    <loc>https://sebastianrowan.github.io/sviBuildr/LICENSE.html</loc>
+    <loc>https://sebastianrowan.github.io/svibuildr/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://sebastianrowan.github.io/sviBuildr/authors.html</loc>
+    <loc>https://sebastianrowan.github.io/svibuildr/authors.html</loc>
   </url>
   <url>
-    <loc>https://sebastianrowan.github.io/sviBuildr/index.html</loc>
+    <loc>https://sebastianrowan.github.io/svibuildr/index.html</loc>
   </url>
   <url>
-    <loc>https://sebastianrowan.github.io/sviBuildr/reference/calculate_svi.html</loc>
+    <loc>https://sebastianrowan.github.io/svibuildr/reference/calculate_svi.html</loc>
   </url>
   <url>
-    <loc>https://sebastianrowan.github.io/sviBuildr/reference/get_2000_2010_data.html</loc>
+    <loc>https://sebastianrowan.github.io/svibuildr/reference/get_2000_2010_data.html</loc>
   </url>
   <url>
-    <loc>https://sebastianrowan.github.io/sviBuildr/reference/get_svi_from_cdc.html</loc>
+    <loc>https://sebastianrowan.github.io/svibuildr/reference/get_svi_from_cdc.html</loc>
   </url>
   <url>
-    <loc>https://sebastianrowan.github.io/sviBuildr/reference/index.html</loc>
+    <loc>https://sebastianrowan.github.io/svibuildr/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://sebastianrowan.github.io/sviBuildr/reference/sviBuildr.html</loc>
-  </url>
-  <url>
-    <loc>https://sebastianrowan.github.io/sviBuildr/reference/validate_state.html</loc>
+    <loc>https://sebastianrowan.github.io/svibuildr/reference/validate_state.html</loc>
   </url>
 </urlset>
