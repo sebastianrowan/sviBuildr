@@ -50,9 +50,9 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
                     key = NULL, moe_level = 90, ...) {
 
     #TODO: Implement pre-2020 methodology
-    if (year != 2020) {
-        msg <- "SVI calculation currently only available for year 2020. Use
-        get_svi_from_cdc() instead."
+    if (year != 2020 | use_2020_method == FALSE) {
+        msg <- "SVI calculation currently only available for year 2020 using
+        the 2020 methodology. Use get_svi_from_cdc() instead."
         rlang::abort(msg)
     }
     geography <- tolower(geography)

@@ -33,3 +33,14 @@ test_that(
     )
   }
 )
+
+test_that(
+  "Refuses to calculate SVI using non 2020 method",
+  {
+    expect_error(
+      calculate_svi("county", year = 2020, use_2020_method = FALSE, state = "nh"),
+      "SVI calculation currently only available for year 2020."
+    )
+  }
+)
+
