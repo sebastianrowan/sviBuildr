@@ -3,13 +3,13 @@
 <img src=logo.png width = "250px">
 
 <!-- badges: start -->
-[![lifecycle](https://raw.githubusercontent.com/sebastianrowan/sviBuildr/86f4c909318408a4c26867a2e7477c5c518c199c/man/figures/lifecycle-experimental.svg)](https://github.com/sebastianrowan/sviBuildr)
-[![R-CMD-check](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/R-CMD-check.yaml)
-[![pkgdown](https://github.com/sebastianrowan/sviBuildr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/sebastianrowan/sviBuildr/actions/workflows/pkgdown.yaml)
-[![Codecov test coverage](https://codecov.io/gh/sebastianrowan/sviBuildr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/sebastianrowan/sviBuildr?branch=master)
+[![lifecycle](https://raw.githubusercontent.com/sebastianrowan/svibuildr/86f4c909318408a4c26867a2e7477c5c518c199c/man/figures/lifecycle-experimental.svg)](https://github.com/sebastianrowan/svibuildr)
+[![R-CMD-check](https://github.com/sebastianrowan/svibuildr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sebastianrowan/svibuildr/actions/workflows/R-CMD-check.yaml)
+[![pkgdown](https://github.com/sebastianrowan/svibuildr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/sebastianrowan/svibuildr/actions/workflows/pkgdown.yaml)
+[![Codecov test coverage](https://codecov.io/gh/sebastianrowan/svibuildr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/sebastianrowan/svibuildr?branch=master)
 <!-- badges: end -->
 
-`sviBuildr` is an R package that allows users to download or construct
+`svibuildr` is an R package that allows users to download or construct
 Social Vulnerability Index datasets as tidyverse dataframes or as simple
 features dataframes for spatial analyses. Users can choose to download
 precompiled datasets from the
@@ -19,14 +19,14 @@ Community Survey.
 
 Pre-compiled SVI data is only available for individual states or as a
 single SVI for the entire nation. Downloading raw Census data and
-compiling the SVI with `sviBuildr` allows users to construct an SVI for
+compiling the SVI with `svibuildr` allows users to construct an SVI for
 any study area in the US. For example, one could calculate the SVI for a
 study area consisting of three states in which SVI scores are calculated
 by comparing values across counties in just the three states rather than
 across all 50 states:
 
 ```r
-library(sviBuildr)
+library(svibuildr)
 
 tri_state_svi <- calculate_svi(
     geography = "county", year = 2020, state = c("ME", "NH", "VT")
@@ -48,11 +48,11 @@ web page at https://www.atsdr.cdc.gov/placeandhealth/svi/index.html.
 
 ## Installation
 
-sviBuildr can be installed from this repositority using:
+svibuildr can be installed from this repositority using:
 
 ```r
 install.packages('devtools')
-devtools::install_github('sebastianrowan/sviBuildr')
+devtools::install_github('sebastianrowan/svibuildr')
 ```
 
 ## References

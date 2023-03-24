@@ -9,7 +9,7 @@
 #' supported by the ADSTR.
 #'
 #' @author Sebastian Rowan
-#' @name sviBuildr
+#' @name svibuildr
 #' @docType package
 #' @import cli
 #' @import dplyr

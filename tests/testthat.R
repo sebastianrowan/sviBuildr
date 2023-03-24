@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(sviBuildr)
+library(svibuildr)
 
-test_check("sviBuildr")
+test_check("svibuildr")
