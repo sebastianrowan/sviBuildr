@@ -15,10 +15,9 @@
 #' @export
 get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
   geography <- tolower(geography)
-  state <- tolower(state)
 
-  if (!(geography %in% c("tract", "county"))) {
-    msg <- glue::glue("Geography {geography} is not a valid input.")
+  if ((length(geography) > 1) || !(geography %in% c("tract", "county"))) {
+    msg <- ("Geography not valid.")
     rlang::abort(msg)
   }
 
@@ -34,6 +33,19 @@ get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
     get_2000_2010_data(geography, year, state, geometry)
   }
 
+  if (is.null(state)) {
+      msg <- "No state specified. Requesting US data."
+      message(msg)
+      state <- "us"
+    }
+  
+  state <- tolower(state)
+
+  if (length(state) > 1) {
+    msg <- "get_cdc only accepts one state or 'US' per request."
+    rlang::abort(msg)
+  }
+
   base_url <- paste0("svi.cdc.gov/Documents/Data/", year, "_SVI_Data/")
   file_ext <- ifelse(
     geometry == TRUE,
@@ -42,7 +54,7 @@ get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
   )
 
   folder <- ifelse(
-    state == "US",
+    state == "us",
     "",
     ifelse(
       geography == "county",
@@ -123,7 +135,7 @@ get_2000_2010_data <- function(geography, year, state, geometry) {
   file_ext <- ".csv"
 
   folder <- ifelse(
-    state == "US",
+    state == "us",
     "",
     "States/"
   )

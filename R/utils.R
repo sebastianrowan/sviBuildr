@@ -14,12 +14,12 @@ validate_state <- function(state = NULL, identifier) {
     rlang::abort(msg)
   }
 
+  state <- tolower(state)
+
   if (!(identifier %in% c("fips", "abb", "name", "name_fmt"))) {
     msg <- paste(identifier, "is not a valid identifier")
     rlang::abort(msg)
   }
-
-  state <- tolower(stringr::str_trim(state)) # forgive white space
 
   if (state == "us") {
     return("US")
@@ -63,13 +63,5 @@ validate_state <- function(state = NULL, identifier) {
         call. = FALSE
       )
     }
-  } else {
-    stop(
-        sprintf(
-            "'%s' is not a valid FIPS code or state name/abbreviation",
-            state
-        ),
-        call. = FALSE
-      )
   }
 }

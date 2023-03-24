@@ -50,22 +50,25 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
                     key = NULL, moe_level = 90, ...) {
 
     #TODO: Implement pre-2020 methodology
-    if (year != 2020 | use_2020_method == FALSE) {
+    # once other years implemented, use_2020_method should only be checked if
+    #   using previous year. Otherwise, ignore with message.
+    if (year != 2020 || use_2020_method == FALSE) {
         msg <- "SVI calculation currently only available for year 2020 using
         the 2020 methodology. Use get_svi_from_cdc() instead."
-        rlang::abort(msg)
-    }
-    geography <- tolower(geography)
-    state <- tolower(state)
-
-    if (!(geography %in% c("tract", "county"))) {
-        msg <- glue::glue("Geography {geography} is not a valid input.")
         rlang::abort(msg)
     }
 
     if (is.null(state)) {
       msg <- "No state specified"
       rlang::abort(msg)
+    }
+
+    geography <- tolower(geography)
+    state <- tolower(state)
+
+    if ((length(geography) > 1) || !(geography %in% c("tract", "county"))) {
+        msg <- ("Geography not valid.")
+        rlang::abort(msg)
     }
 
     if (sum(tolower(state) == "us") > 0) {
@@ -75,11 +78,12 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
     }
 
     if (!is.logical(geometry)) {
-        msg <- "Expected logical value for geometry."
+        msg <- glue::glue("Expected logical value for geometry.
+        Got type {typeof(geometry)}")
         rlang::abort(msg)
     }
 
-    if (!moe_level %in% c(90, 95, 99)) {
+    if ((length(moe_level) > 1) || !(moe_level %in% c(90, 95, 99))) {
         msg <- "Invalid moe_level."
         rlang::abort(msg)
     }
@@ -119,7 +123,8 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
         moe_level = moe_level, survey = "acs5"
     )
 
-    # calculate and rename variable following SVI documentation
+    # calculate and rename variables following SVI documentation
+    #TODO: handle NA and 0 values in calcs, especially for MOE.
     # nolint start: object_usage_linter
     svi_data <- raw_data %>%
       dplyr::filter(S0601_C01_001E > 0) %>%
