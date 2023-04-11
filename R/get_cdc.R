@@ -37,14 +37,12 @@ get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
       msg <- "No state specified. Requesting US data."
       message(msg)
       state <- "us"
-    }
-  
-  state <- tolower(state)
-
-  if (length(state) > 1) {
+  } else if (length(state) > 1) {
     msg <- "get_cdc only accepts one state or 'US' per request."
     rlang::abort(msg)
   }
+
+  state <- tolower(state)
 
   base_url <- paste0("svi.cdc.gov/Documents/Data/", year, "_SVI_Data/")
   file_ext <- ifelse(
