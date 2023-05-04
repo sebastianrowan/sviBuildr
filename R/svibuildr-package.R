@@ -13,7 +13,6 @@
 #' @docType package
 #' @import cli
 #' @import dplyr
-#' @import magrittr
 #' @import sf
 #' @import stringr
 #' @import tidycensus
@@ -21,7 +20,7 @@
 #' @import tigris
 #' @import withr
 #' @import readr
-#' @importFrom dplyr ntile
+#' @importFrom tidyr replace_na
 #' @importFrom glue glue
 #' @importFrom lifecycle deprecated
 #' @importFrom magrittr %>%

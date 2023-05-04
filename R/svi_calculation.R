@@ -127,7 +127,7 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
     #TODO: handle NA and 0 values in calcs, especially for MOE.
     # nolint start: object_usage_linter
     svi_data <- raw_data %>%
-      dplyr::filter(S0601_C01_001E > 0) %>%
+      dplyr::filter(S0601_C01_001E > 0) %>% # Join back later to keep 0 pop tracts.
       dplyr::mutate(
         e_totpop = S0601_C01_001E,
         m_totpop = S0601_C01_001M,
@@ -157,7 +157,7 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
         m_age_17 = B09001_001M,
         e_disabl = DP02_0072E,
         m_disabl = DP02_0072M,
-        e_sngpnt = (B11012_010E + B11012_015E), # lookout for issues with NA  values here
+        e_sngpnt = (B11012_010E + B11012_015E),
         m_sngpnt = sqrt(B11012_010M^2 + B11012_015M^2),
         e_limeng = (
             B16005_007E + B16005_008E + B16005_012E + B16005_013E +
@@ -292,45 +292,73 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
 
     }
 
-    # calclate variable percepercent_ranks and themes
+    # calculate variable percent_ranks and themes
     svi_data <- svi_data %>%
-        mutate(
+      # dplyr::mutate(dplyr::across(
+      #   .cols = dplyr::matches(
+      #     "^([em]p+_)|^([(DP)SB]+)"
+      #     ),
+      #   .fns = ~tidyr::replace_na(., -999)
+      # )) %>%
+      dplyr::mutate(dplyr::across(
+        .cols = dplyr::starts_with("ep"),
+        .fns = ~round(., 1) # I think differences between my calcs and CDC may be due to rounding differences
+      )) %>%
+      dplyr::mutate(
             epl_pov150 = percent_rank(ep_pov150),
             epl_unemp = percent_rank(ep_unemp),
             epl_hburd = percent_rank(ep_hburd),
             epl_nohsdp = percent_rank(ep_nohsdp),
             epl_uninsur = percent_rank(ep_uninsur),
-            spl_theme1 = (
-                epl_pov150 + epl_unemp + epl_hburd + epl_nohsdp + epl_uninsur
-            ),
-            rpl_theme1 = percent_rank(spl_theme1),
             epl_age65 = percent_rank(ep_age65),
             epl_age17 = percent_rank(ep_age17),
             epl_disabl = percent_rank(ep_disabl),
             epl_sngpnt = percent_rank(ep_sngpnt),
             epl_limeng = percent_rank(ep_limeng),
-            spl_theme2 = (
-                epl_age65 + epl_age17 + epl_disabl + epl_sngpnt + epl_limeng
-            ),
-            rpl_theme2 = percent_rank(spl_theme2),
             epl_minrty = percent_rank(ep_minrty),
-            spl_theme3 = epl_minrty,
-            rpl_theme3 = percent_rank(spl_theme3),
             epl_munit = percent_rank(ep_munit),
             epl_mobile = percent_rank(ep_mobile),
             epl_crowd = percent_rank(ep_crowd),
             epl_noveh = percent_rank(ep_noveh),
             epl_groupq = percent_rank(ep_groupq),
-            spl_theme4 = (
-                epl_munit + epl_mobile + epl_crowd + epl_noveh + epl_groupq
-            ),
-            rpl_theme4 = percent_rank(spl_theme4),
-            spl_themes = (
-                spl_theme1 + spl_theme2 + spl_theme3 + spl_theme4
-            ),
-            rpl_themes = percent_rank(spl_themes),
+        ) %>%
+      dplyr::mutate(dplyr::across(
+        .cols = dplyr::starts_with("epl"),
+        .fns = ~round(., 4) # I think differences between my calcs and CDC may be due to rounding differences
+      )) %>%
+      dplyr::mutate(
+        spl_theme1 = (
+          epl_pov150 + epl_unemp + epl_hburd + epl_nohsdp + epl_uninsur
+        ),
+        spl_theme2 = (
+          epl_age65 + epl_age17 + epl_disabl + epl_sngpnt + epl_limeng
+        ),
+        spl_theme3 = epl_minrty,
+        spl_theme4 = (
+          epl_munit + epl_mobile + epl_crowd + epl_noveh + epl_groupq
+        ),
+        spl_themes = (
+          spl_theme1 + spl_theme2 + spl_theme3 + spl_theme4
         )
+      ) %>%
+      dplyr::mutate(dplyr::across(
+        .cols = dplyr::starts_with("spl"),
+        .fns = ~round(., 4) # I think differences between my calcs and CDC may be due to rounding differences
+      )) %>%
+      dplyr::mutate(
+        rpl_theme1 = percent_rank(spl_theme1),
+        rpl_theme2 = percent_rank(spl_theme2),
+        rpl_theme3 = percent_rank(spl_theme3),
+        rpl_theme4 = percent_rank(spl_theme4),
+        rpl_themes = percent_rank(spl_themes),
+      ) %>%
+      dplyr::mutate(dplyr::across(
+        .cols = dplyr::starts_with("rpl"),
+        .fns = ~round(., 4) # I think differences between my calcs and CDC may be due to rounding differences
+      ))
         # nolint end
+
+
     flag_vars <- c(
         "epl_pov150", "epl_unemp", "epl_hburd", "epl_nohsdp", "epl_uninsur",
         "epl_age65", "epl_age17", "epl_disabl", "epl_sngpnt", "epl_limeng",
@@ -365,6 +393,17 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
       dplyr::select(
         dplyr::matches("GEOID|NAME|^([emsrf][p|pl]*_)")
       ) # only include svi variables
+
+    # rejoin 0 pop tracts
+    svi_data <- raw_data %>%
+      select(GEOID) %>%
+      left_join(svi_data) %>%
+      dplyr::mutate(dplyr::across(
+        .cols = dplyr::matches(
+          "^([emsr][p|pl]*_)"
+        ),
+        .fns = ~tidyr::replace_na(., -999)
+      ))
 
     return(svi_data)
 }
