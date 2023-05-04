@@ -12,3 +12,4 @@ README.qmd
 ^_pkgdown\.yml$
 ^docs$
 ^codecov\.yml$
+^README_files$
