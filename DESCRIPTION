@@ -24,6 +24,7 @@ Roxygen: list(markdown = TRUE)
 Imports: 
     cli,
     dplyr,
+    tidyr,
     readr,
     magrittr,
     glue,

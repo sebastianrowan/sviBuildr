@@ -13,6 +13,7 @@
 #' @docType package
 #' @import cli
 #' @import dplyr
+#' @import tidyr
 #' @import magrittr
 #' @import sf
 #' @import stringr
