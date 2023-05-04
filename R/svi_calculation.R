@@ -127,7 +127,7 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
     #TODO: handle NA and 0 values in calcs, especially for MOE.
     # nolint start: object_usage_linter
     svi_data <- raw_data %>%
-      dplyr::filter(S0601_C01_001E > 0) %>%
+      dplyr::filter(S0601_C01_001E > 0) %>% # Join back later to keep 0 pop tracts.
       dplyr::mutate(
         e_totpop = S0601_C01_001E,
         m_totpop = S0601_C01_001M,
