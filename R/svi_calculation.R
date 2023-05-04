@@ -294,12 +294,6 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
 
     # calculate variable percent_ranks and themes
     svi_data <- svi_data %>%
-      # dplyr::mutate(dplyr::across(
-      #   .cols = dplyr::matches(
-      #     "^([em]p+_)|^([(DP)SB]+)"
-      #     ),
-      #   .fns = ~tidyr::replace_na(., -999)
-      # )) %>%
       dplyr::mutate(dplyr::across(
         .cols = dplyr::starts_with("ep"),
         .fns = ~round(., 1) # I think differences between my calcs and CDC may be due to rounding differences
@@ -394,7 +388,7 @@ calculate_svi <- function(geography, cache_table = FALSE, year = 2020,
         dplyr::matches("GEOID|NAME|^([emsrf][p|pl]*_)")
       ) # only include svi variables
 
-    # rejoin 0 pop tracts
+    # rejoin 0 pop tracts and set na values to -999
     svi_data <- raw_data %>%
       select(GEOID) %>%
       left_join(svi_data) %>%

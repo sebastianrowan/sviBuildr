@@ -1,12 +1,15 @@
-
+svibuildr
+================
 
 <img src=logo.png width = "250px">
 
 <!-- badges: start -->
+
 [![lifecycle](https://raw.githubusercontent.com/sebastianrowan/svibuildr/86f4c909318408a4c26867a2e7477c5c518c199c/man/figures/lifecycle-experimental.svg)](https://github.com/sebastianrowan/svibuildr)
 [![R-CMD-check](https://github.com/sebastianrowan/svibuildr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sebastianrowan/svibuildr/actions/workflows/R-CMD-check.yaml)
 [![pkgdown](https://github.com/sebastianrowan/svibuildr/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/sebastianrowan/svibuildr/actions/workflows/pkgdown.yaml)
-[![Codecov test coverage](https://codecov.io/gh/sebastianrowan/svibuildr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/sebastianrowan/svibuildr?branch=master)
+[![Codecov test
+coverage](https://codecov.io/gh/sebastianrowan/svibuildr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/sebastianrowan/svibuildr?branch=master)
 <!-- badges: end -->
 
 `svibuildr` is an R package that allows users to download or construct
@@ -25,7 +28,7 @@ study area consisting of three states in which SVI scores are calculated
 by comparing values across counties in just the three states rather than
 across all 50 states:
 
-```r
+``` r
 library(svibuildr)
 
 tri_state_svi <- calculate_svi(
@@ -48,12 +51,45 @@ web page at https://www.atsdr.cdc.gov/placeandhealth/svi/index.html.
 
 ## Installation
 
-svibuildr can be installed from this repositority using:
+`svibuildr` can be installed from this repositority using:
 
-```r
-install.packages('devtools')
-devtools::install_github('sebastianrowan/svibuildr')
-```
+    ```r
+    install.packages('devtools')
+    devtools::install_github('sebastianrowan/svibuildr')
+    ```
+
+## Validation
+
+Using `svibuildr` to generate the Social Vulnerability Index for a
+single state reveals that there are slight discrepencies between the
+index scores calculated in R and the values provided when downloading
+the data directly from the CDC website. I believe these discrepancies
+are due to differences in how rounding is handled in R versus Excel
+which appears to be the tool used by CDC to generate the datasets on
+their website.
+
+I have manually compared rankings across all four themes as well as the
+overall SVI ranking at the tract and county level for a handful of
+states, and it appears that this issue only affects rankings at the
+tract scale. When tract rankings are affected, the differences are very
+small. Certain tracts may move up or down by one position in their
+statewide rank, but I have observed no differences that I feel would be
+detrimental to an analysis using this data at the tract scale.
+Furthermore, I have not observed any differences between the CDC data
+and the calculated data in variable values which comprise the ranking
+variables.
+
+The figures below show histograms of tract level comparisons of the SVI
+scores calculated by `svibuildr` and the values in the datasets
+downloaded from the CDC.
+
+![California](https://raw.githubusercontent.com/sebastianrowan/svibuildr/master/man/img/cdc_compare_hist_06_tract.png)
+
+![New York](https://raw.githubusercontent.com/sebastianrowan/svibuildr/master/man/img/cdc_compare_hist_36_tract.png)
+
+![Texas](https://raw.githubusercontent.com/sebastianrowan/svibuildr/master/man/img/cdc_compare_hist_48_tract.png)
+
+![Florida](https://raw.githubusercontent.com/sebastianrowan/svibuildr/master/man/img/cdc_compare_hist_12_tract.png)
 
 ## References
 
