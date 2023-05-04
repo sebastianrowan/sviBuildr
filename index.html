@@ -78,7 +78,12 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><p><img src="logo.png" width="250px"></p>
+  <main id="main" class="col-md-9"><div class="section level1">
+<div class="page-header">
+<img src="logo.png" class="logo" alt=""><h1 id="svibuildr">svibuildr<a class="anchor" aria-label="anchor" href="#svibuildr"></a>
+</h1>
+</div>
+<p><img src="logo.png" width="250px"></p>
 <!-- badges: start -->
 
 <p><code>svibuildr</code> is an R package that allows users to download or construct Social Vulnerability Index datasets as tidyverse dataframes or as simple features dataframes for spatial analyses. Users can choose to download precompiled datasets from the <a href="https://www.atsdr.cdc.gov/placeandhealth/svi/data_documentation_download.html" class="external-link">CDC</a> or compile the SVI with data from the US Census Bureau’s American Community Survey.</p>
@@ -95,10 +100,30 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>svibuildr can be installed from this repositority using:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'devtools'</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'sebastianrowan/svibuildr'</span><span class="op">)</span></span></code></pre></div>
+<p><code>svibuildr</code> can be installed from this repositority using:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="st">```</span><span class="at">r</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">install.packages('devtools')</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">devtools::install_github('sebastianrowan/svibuildr')</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="st">```</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="validation">Validation<a class="anchor" aria-label="anchor" href="#validation"></a>
+</h2>
+<p>Using <code>svibuildr</code> to generate the Social Vulnerability Index for a single state reveals that there are slight discrepencies between the index scores calculated in R and the values provided when downloading the data directly from the CDC website. I believe these discrepancies are due to differences in how rounding is handled in R versus Excel which appears to be the tool used by CDC to generate the datasets on their website.</p>
+<p>I have manually compared rankings across all four themes as well as the overall SVI ranking at the tract and county level for a handful of states, and it appears that this issue only affects rankings at the tract scale. When tract rankings are affected, the differences are very small. Certain tracts may move up or down by one position in their statewide rank, but I have observed no differences that I feel would be detrimental to an analysis using this data at the tract scale. Furthermore, I have not observed any differences between the CDC data and the calculated data in variable values which comprise the ranking variables.</p>
+<p>The figures below show histograms of tract level comparisons of the SVI scores calculated by <code>svibuildr</code> and the values in the datasets downloaded from the CDC.</p>
+<div class="figure">
+<img src="https://raw.githubusercontent.com/sebastianrowan/svibuildr/master/man/img/cdc_compare_hist_06_tract.png" alt=""><p class="caption">California</p>
+</div>
+<div class="figure">
+<img src="https://raw.githubusercontent.com/sebastianrowan/svibuildr/master/man/img/cdc_compare_hist_36_tract.png" alt=""><p class="caption">New York</p>
+</div>
+<div class="figure">
+<img src="https://raw.githubusercontent.com/sebastianrowan/svibuildr/master/man/img/cdc_compare_hist_48_tract.png" alt=""><p class="caption">Texas</p>
+</div>
+<div class="figure">
+<img src="https://raw.githubusercontent.com/sebastianrowan/svibuildr/master/man/img/cdc_compare_hist_12_tract.png" alt=""><p class="caption">Florida</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -116,7 +141,7 @@
 </div>
 </div>
 </div>
-
+</div>
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
