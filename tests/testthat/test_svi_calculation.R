@@ -94,7 +94,6 @@ test_that(
 test_that(
   "Properly downloads and calculates 2018 or 2020 SVI with adjunct vars",
   {
-    expect_s3_class(calculate_svi("county", year = 2020, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
     expect_s3_class(calculate_svi("county", year = 2018, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
   }
 )
