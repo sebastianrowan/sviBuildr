@@ -51,7 +51,7 @@ calculate_svi <- function(
     #TODO: Implement pre-2020 methodology
     # once other years implemented, use_2020_method should only be checked if
     #   using previous year. Otherwise, ignore with message.
-    if (!(year %in% c(2018,2020))) {
+    if (!(year %in% c(2018, 2020))) {
         msg <- "SVI calculation currently only available years 2018 and 2020.
         Use get_svi_from_cdc() instead."
         rlang::abort(msg)

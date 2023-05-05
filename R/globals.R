@@ -143,5 +143,5 @@ svi_vars$vars2018$vars <- c(
 )
 
 svi_vars$vars2018$adj_vars <- c(
-  "S207_C04_001", "S207_C05_001"
+  "S2701_C04_001", "S2701_C05_001"
 )
