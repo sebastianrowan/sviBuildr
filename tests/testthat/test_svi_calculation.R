@@ -3,7 +3,7 @@ test_that(
   {
     expect_error(
       calculate_svi("county", year = 2016, state = "nh"),
-      "SVI calculation currently only available for year 2020."
+      "SVI calculation currently only available for years"
     )
   }
 )
@@ -94,7 +94,7 @@ test_that(
 test_that(
   "Properly downloads and calculates 2018 or 2020 SVI with adjunct vars",
   {
-    expect_s3_class(calculate_svi("county", year = 2020, state = 33, include_adjunct_vars = TRUE), "data.frame")
-    expect_s3_class(calculate_svi("county", year = 2018, state = 33, include_adjunct_vars = TRUE), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2020, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2018, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
   }
 )
