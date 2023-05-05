@@ -26,6 +26,10 @@ jobs:
           extra-packages: any::covr
           needs: coverage
 
+      - name: API Key
+        run: |
+          echo CENSUS_API_KEY="$CENSUS_API_KEY" >> ~/.Renviron
+
       - name: Test coverage
         run: |
           covr::codecov(

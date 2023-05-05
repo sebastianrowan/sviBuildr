@@ -81,7 +81,8 @@ variables.
 
 The figures below show histograms of tract level comparisons of the SVI
 scores calculated by `svibuildr` and the values in the datasets
-downloaded from the CDC.
+downloaded from the CDC.Histograms for all 50 states are available
+[here](https://github.com/sebastianrowan/svibuildr/tree/master/man/img).
 
 ![California](https://raw.githubusercontent.com/sebastianrowan/svibuildr/master/man/img/cdc_compare_hist_06_tract.png)
 

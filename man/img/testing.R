@@ -12,30 +12,34 @@ sts <- c("01", "02", "04", "05", "06", "08", "09", "10", "11", "12", "13", "15",
          )
 sts <- c(sts, "22", "30", "32")
 
+sts <- c("06", "12", "36", "33")
+year = 2018
+
 for (st in sts) {
   for (geog in geogs) {
-    compare_svi(st, geog)
+    compare_svi(st, geog, year)
   }
 }
 
 compare_svi('22', 'county')
 
 
-compare_svi <- function(st, geog) {
+compare_svi <- function(st, geog, year) {
 
   st_name = stringr::str_to_title(validate_state(st, 'name'))
   geog_lab = paste0(stringr::str_to_title(stringr::str_replace(geog, "y", "ie")), "s")
+  xlims <- c(-.01, .01)
 
-  cdc2020 <- get_svi_from_cdc(geog, 2020, state = st, geometry = TRUE) %>%
+  cdc <- get_svi_from_cdc(geog, year, state = st, geometry = TRUE) %>%
     sf::st_drop_geometry() %>%
     mutate(FIPS = as.character(FIPS))
 
-  build2020 <- calculate_svi(geog, year = 2020, state = st, geometry = FALSE, include_adjunct_vars = F) %>%
+  build <- calculate_svi(geog, year = year, state = st, geometry = FALSE, include_adjunct_vars = F) %>%
     mutate(GEOID = as.character(GEOID))
 
-  compare2020 <- cdc2020 %>%
+  compare <- cdc %>%
     left_join(
-      build2020,
+      build,
       by = c("FIPS" = "GEOID"),
       suffix = c(".cdc", ".build")
     ) %>%
@@ -65,7 +69,7 @@ compare_svi <- function(st, geog) {
       RPL_THEMES, rpl_themes, difs, RANKS, ranks
     )
 
-  check <- compare2020 %>%
+  check <- compare %>%
     select(FIPS, dif1, dif2, dif3, dif4, difs) %>%
     tidyr::pivot_longer(
       cols = !FIPS,
@@ -77,60 +81,58 @@ compare_svi <- function(st, geog) {
       n = n()
     )
 
-
-
-  p1 <- ggplot(compare2020 %>% filter(RPL_THEME1 >= 0)) +
+  p1 <- ggplot(compare %>% filter(RPL_THEME1 >= 0)) +
     geom_histogram(aes(x = rpl_theme1 - RPL_THEME1)) +
     labs(
       x = "SVIBuildr - CDC Theme 1",
       y = geog_lab
     ) +
-    xlim(-0.01, 0.01) +
+    xlim(xlims) +
     theme_cowplot()
 
-  p2 <- ggplot(compare2020 %>% filter(RPL_THEME2 >= 0)) +
+  p2 <- ggplot(compare %>% filter(RPL_THEME2 >= 0)) +
     geom_histogram(aes(x = rpl_theme2 - RPL_THEME2)) +
     labs(
       x = "SVIBuildr - CDC Theme 2",
       y = geog_lab
     ) +
-    xlim(-0.01, 0.01) +
+    xlim(xlims) +
     theme_cowplot()
 
-  p3 <- ggplot(compare2020 %>% filter(RPL_THEME3 >= 0)) +
+  p3 <- ggplot(compare %>% filter(RPL_THEME3 >= 0)) +
     geom_histogram(aes(x = rpl_theme3 - RPL_THEME3)) +
     labs(
       x = "SVIBuildr - CDC Theme 3",
       y = geog_lab
     ) +
-    xlim(-0.01, 0.01) +
+    xlim(xlims) +
     theme_cowplot()
 
-  p4 <- ggplot(compare2020 %>% filter(RPL_THEME4 >= 0)) +
+  p4 <- ggplot(compare %>% filter(RPL_THEME4 >= 0)) +
     geom_histogram(aes(x = rpl_theme4 - RPL_THEME4)) +
     labs(
       x = "SVIBuildr - CDC Theme 4",
       y = geog_lab
     ) +
-    xlim(-0.01, 0.01) +
+    xlim(xlims) +
     theme_cowplot()
 
-  ps <- ggplot(compare2020 %>% filter(RPL_THEMES >= 0)) +
+  ps <- ggplot(compare %>% filter(RPL_THEMES >= 0)) +
     geom_histogram(aes(x = rpl_themes - RPL_THEMES)) +
     labs(
       title = "SVI Theme Differences Between SVIBuildr and CDC",
-      subtitle = paste0(st_name, " ", geog_lab, " - 2020"),
+      subtitle = paste0(st_name, " ", geog_lab, " - ", year),
       x = "SVIBuildr - CDC All Themes",
       y = geog_lab
     ) +
-    xlim(-0.01, 0.01) +
+    xlim(xlims) +
     theme_cowplot()
 
   theme_plots <- plot_grid(p1, p2, p3, p4, nrow = 2)
 
   plot_out <- plot_grid(ps, theme_plots, ncol = 1)
 
-  plot_path <- paste0("man/img/cdc_compare_hist_", st, "_", geog, ".png")
+  plot_path <- paste0("man/img/", year, "/cdc_compare_hist_", st, "_", geog, ".png")
 
   save_plot(plot_path, plot_out, base_height = 6)
 }

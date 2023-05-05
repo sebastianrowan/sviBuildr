@@ -9,7 +9,6 @@ calculate_svi(
   geography,
   cache_table = FALSE,
   year = 2020,
-  use_2020_method = TRUE,
   state = NULL,
   county = NULL,
   geometry = FALSE,
@@ -27,10 +26,6 @@ calculate_svi(
 faster future access. Defaults to FALSE.}
 
 \item{year}{The end year of the 5-year ACS data to be used (Default: 2020).}
-
-\item{use_2020_method}{if TRUE (the default) calculate the SVI for the given
-year using the most recent methodology released by the CDC (2020). If
-FALSE, use the most recent methology most-recent for the given year.}
 
 \item{state}{An optional vector of states for which you are requesting data.
 State names and FIPS codes are accepted. Defaults to NULL.}
