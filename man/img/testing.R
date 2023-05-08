@@ -13,7 +13,7 @@ sts <- c("01", "02", "04", "05", "06", "08", "09", "10", "11", "12", "13", "15",
 sts <- c(sts, "22", "30", "32")
 
 sts <- c("06", "12", "36", "33")
-year = 2018
+year = 2016
 
 for (st in sts) {
   for (geog in geogs) {
@@ -21,14 +21,14 @@ for (st in sts) {
   }
 }
 
-compare_svi('22', 'county')
+compare_svi('33', 'tract', 2016)
 
 
 compare_svi <- function(st, geog, year) {
 
   st_name = stringr::str_to_title(validate_state(st, 'name'))
   geog_lab = paste0(stringr::str_to_title(stringr::str_replace(geog, "y", "ie")), "s")
-  xlims <- c(-.01, .01)
+  xlims <- c(-.1, .1)
 
   cdc <- get_svi_from_cdc(geog, year, state = st, geometry = TRUE) %>%
     sf::st_drop_geometry() %>%
@@ -136,3 +136,17 @@ compare_svi <- function(st, geog, year) {
 
   save_plot(plot_path, plot_out, base_height = 6)
 }
+
+
+cdc <- get_svi_from_cdc("tract", 2016, state = 33, geometry = F) %>%
+  mutate(FIPS = as.character(FIPS))
+
+build <- calculate_svi("tract", 2016, state = 33, geometry = FALSE, include_adjunct_vars = F) %>%
+  mutate(GEOID = as.character(GEOID))
+
+compare <- cdc %>%
+  left_join(
+    build,
+    by = c("FIPS" = "GEOID"),
+    suffix = c(".cdc", ".build")
+  )
