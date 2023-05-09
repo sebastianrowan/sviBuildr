@@ -28,9 +28,9 @@ compare_svi <- function(st, geog, year) {
 
   st_name = stringr::str_to_title(validate_state(st, 'name'))
   geog_lab = paste0(stringr::str_to_title(stringr::str_replace(geog, "y", "ie")), "s")
-  xlims <- c(-.1, .1)
+  xlims <- c(-.01, .01)
 
-  cdc <- get_svi_from_cdc(geog, year, state = st, geometry = TRUE) %>%
+  cdc <- get_svi_from_cdc(geog, year = year, state = st, geometry = TRUE) %>%
     sf::st_drop_geometry() %>%
     mutate(FIPS = as.character(FIPS))
 
@@ -138,15 +138,17 @@ compare_svi <- function(st, geog, year) {
 }
 
 
-cdc <- get_svi_from_cdc("tract", 2016, state = 33, geometry = F) %>%
-  mutate(FIPS = as.character(FIPS))
+cdc <- get_svi_from_cdc("tract", year = 2016, state = "NH", geometry = F) %>%
+  mutate(FIPS = as.character(FIPS)) %>%
+  filter(E_TOTPOP > 0)
 
-build <- calculate_svi("tract", 2016, state = 33, geometry = FALSE, include_adjunct_vars = F) %>%
-  mutate(GEOID = as.character(GEOID))
+build <- calculate_svi("tract", year = 2016, state = "NH", geometry = F, include_adjunct_vars = F) %>%
+  mutate(GEOID = as.character(GEOID)) %>%
+  filter(e_totpop >0)
 
 compare <- cdc %>%
   left_join(
     build,
     by = c("FIPS" = "GEOID"),
     suffix = c(".cdc", ".build")
-  )
+  ) %>% select(order(colnames(.)))

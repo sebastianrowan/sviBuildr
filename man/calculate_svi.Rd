@@ -7,7 +7,6 @@ calculate the Social Vulnerability Index for the specified region(s)}
 \usage{
 calculate_svi(
   geography,
-  cache_table = FALSE,
   year = 2020,
   state = NULL,
   county = NULL,
@@ -15,15 +14,13 @@ calculate_svi(
   include_adjunct_vars = FALSE,
   key = NULL,
   moe_level = 90,
+  cache_table = FALSE,
   ...
 )
 }
 \arguments{
 \item{geography}{The desired geographic scale for the SVI. Can be
 "county" or "tract"}
-
-\item{cache_table}{Whether or not tidycensus should cache table names for
-faster future access. Defaults to FALSE.}
 
 \item{year}{The end year of the 5-year ACS data to be used (Default: 2020).}
 
@@ -48,6 +45,9 @@ certain circumstances.}
 
 \item{moe_level}{The confidence level of the returned margin of error.  One
 of 90 (the default), 95, or 99.}
+
+\item{cache_table}{Whether or not tidycensus should cache table names for
+faster future access. Defaults to FALSE.}
 
 \item{...}{Other keyword arguments}
 }

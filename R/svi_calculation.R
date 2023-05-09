@@ -3,8 +3,6 @@
 #'
 #' @param  geography The desired geographic scale for the SVI. Can be
 #'   "county" or "tract"
-#' @param cache_table Whether or not tidycensus should cache table names for
-#'   faster future access. Defaults to FALSE.
 #' @param year The end year of the 5-year ACS data to be used (Default: 2020).
 #' @param state An optional vector of states for which you are requesting data.
 #'   State names and FIPS codes are accepted. Defaults to NULL.
@@ -22,6 +20,8 @@
 #'   \url{https://api.census.gov/data/key_signup.html}
 #' @param moe_level The confidence level of the returned margin of error.  One
 #'   of 90 (the default), 95, or 99.
+#' @param cache_table Whether or not tidycensus should cache table names for
+#'   faster future access. Defaults to FALSE.
 #' @param ... Other keyword arguments
 #'
 #' @return A tibble or sf tibble of the SVI and underlying data for the
@@ -42,10 +42,10 @@
 #' @import dplyr
 #' @export
 calculate_svi <- function(
-    geography, cache_table = FALSE, year = 2020,
+    geography, year = 2020,
     state = NULL, county = NULL,
     geometry = FALSE, include_adjunct_vars = FALSE,
-    key = NULL, moe_level = 90, ...
+    key = NULL, moe_level = 90, cache_table = FALSE, ...
     ) {
 
     #TODO: Implement pre-2020 methodology
@@ -687,7 +687,7 @@ calculate_svi_2016 <- function(raw_data, include_adjunct_vars) {
       ),
       e_minrty = (e_totpop - B01001H_001E),
       m_minrty = sqrt(m_totpop^2 + B01001H_001M^2),
-      e_munit = (DP04_0012E + DP04_0012E),
+      e_munit = (DP04_0012E + DP04_0013E),
       m_munit = sqrt(DP04_0012M^2 + DP04_0013M^2),
       e_mobile = DP04_0014E,
       m_mobile = DP04_0014M,

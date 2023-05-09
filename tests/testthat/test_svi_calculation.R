@@ -1,8 +1,8 @@
 test_that(
-  "Refuses to calculate SVI for year != 2020",
+  "Refuses to calculate SVI for unimplemented year.",
   {
     expect_error(
-      calculate_svi("county", year = 2016, state = "nh"),
+      calculate_svi("county", year = 2017, state = "nh"),
       "SVI calculation currently only available for"
     )
   }
@@ -75,25 +75,36 @@ test_that(
 )
 
 test_that(
-  "Properly downloads and calculates single state 2020 SVI",
+  "Properly downloads and calculates single state SVI",
   {
-    x <- calculate_svi("county", year = 2020, state = "nh")
-    expect_s3_class(x, "data.frame")
+    #expect_s3_class(calculate_svi("county", year = 2000, state = "nh"), "data.frame")
+    #expect_s3_class(calculate_svi("county", year = 2010, state = "nh"), "data.frame")
+    #expect_s3_class(calculate_svi("county", year = 2014, state = "nh"), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2016, state = "nh"), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2018, state = "nh"), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2020, state = "nh"), "data.frame")
   }
 )
 
 test_that(
-  "Properly downloads and calculates multi-state 2018 or 2020 SVI",
+  "Properly downloads and calculates multi-state 2016, 2018 or 2020 SVI",
   {
-    x <- calculate_svi("county", year = 2020, state = c(33, "Vermont", "Me"))
-    y <- calculate_svi("county", year = 2018, state = c(33, "Vermont", "Me"))
-    expect_s3_class(x, "data.frame")
+    #expect_s3_class(calculate_svi("county", year = 2000, state = c(33, "Vermont", "Me")), "data.frame")
+    #expect_s3_class(calculate_svi("county", year = 2010, state = c(33, "Vermont", "Me")), "data.frame")
+    #expect_s3_class(calculate_svi("county", year = 2014, state = c(33, "Vermont", "Me")), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2016, state = c(33, "Vermont", "Me")), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2018, state = c(33, "Vermont", "Me")), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2020, state = c(33, "Vermont", "Me")), "data.frame")
   }
 )
 
 test_that(
-  "Properly downloads and calculates 2018 or 2020 SVI with adjunct vars",
+  "Properly downloads and calculates 2016, 2018 or 2020 SVI with adjunct vars",
   {
+    #expect_s3_class(calculate_svi("county", year = 2000, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
+    #expect_s3_class(calculate_svi("county", year = 2010, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
+    #expect_s3_class(calculate_svi("county", year = 2014, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2016, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
     expect_s3_class(calculate_svi("county", year = 2018, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
     expect_s3_class(calculate_svi("county", year = 2020, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
 }
