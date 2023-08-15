@@ -10,6 +10,7 @@ calculate_svi(
   year = 2020,
   state = NULL,
   county = NULL,
+  region = NULL,
   geometry = FALSE,
   include_adjunct_vars = FALSE,
   key = NULL,
@@ -30,6 +31,9 @@ State names and FIPS codes are accepted. Defaults to NULL.}
 \item{county}{The county for which you are requesting data. County names and
 FIPS codes are accepted. Must be combined with a value supplied to \code{state}.
 Defaults to NULL.}
+
+\item{region}{An sf object used to spatially filter the geography before
+calculating the SVI}
 
 \item{geometry}{if FALSE (the default), return a regular tibble of ACS data.
 if TRUE, uses the tigris package to return an sf tibble with simple feature
