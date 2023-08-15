@@ -44,6 +44,7 @@
 calculate_svi <- function(
     geography, year = 2020,
     state = NULL, county = NULL,
+    region = NULL,
     geometry = FALSE, include_adjunct_vars = FALSE,
     key = NULL, moe_level = 90, cache_table = FALSE, ...
     ) {
@@ -55,6 +56,17 @@ calculate_svi <- function(
         msg <- "SVI calculation currently only available for years 2016, 2018
         and 2020. Use get_svi_from_cdc() instead."
         rlang::abort(msg)
+    }
+
+    if (!is.null(region)) {
+      if (!("sf" %in% class(region))){
+        msg <- "region must be a spatial object."
+        rlang::abort(msg)
+      } else {
+        state <- get_region_states(region, year)
+        msg <- paste0("Getting data for specified region. States: ", paste(state, collapse = " "))
+        rlang::inform(msg)
+      }
     }
 
     if (is.null(state)) {
@@ -104,6 +116,11 @@ calculate_svi <- function(
         moe_level = moe_level, survey = "acs5"
     )
 
+    if (!is.null(region)) {
+      raw_data <- raw_data %>%
+        st_filter(region) # this will also include all areas that touch the specified region
+    }
+
     svi_data <- switch(
       as.character(year),
       "2020" = calculate_svi_2020(raw_data, include_adjunct_vars),
@@ -113,6 +130,8 @@ calculate_svi <- function(
 
     return(svi_data)
 }
+
+
 
 
 #' Calculate the 2020 SVI for the given region
@@ -127,6 +146,7 @@ calculate_svi_2020 <- function(raw_data, include_adjunct_vars) {
   # calculate and rename variables following SVI documentation
   # nolint start: object_usage_linter
   svi_data <- raw_data %>%
+    st_drop_geometry() %>%
     dplyr::filter(S0601_C01_001E > 0) %>% # Join back later to keep 0 pop tracts.
     dplyr::mutate(
       e_totpop = S0601_C01_001E,
@@ -207,9 +227,9 @@ calculate_svi_2020 <- function(raw_data, include_adjunct_vars) {
       mp_uninsur = S2701_C05_001M,
       ep_age65 = S0101_C02_030E,
       mp_age65 = S0101_C02_030M,
-      ep_age17 = (e_age_17 / e_totpop) * 100,
+      ep_age17 = (e_age17 / e_totpop) * 100,
       mp_age17 = (
-        sqrt(m_age_17^2 - ((ep_age17 / 100)^2 * m_totpop^2)) /
+        sqrt(m_age17^2 - ((ep_age17 / 100)^2 * m_totpop^2)) /
           e_totpop
       ) * 100,
       ep_disabl = DP02_0072PE,
@@ -415,6 +435,7 @@ calculate_svi_2018 <- function(raw_data, include_adjunct_vars) {
   # nolint start: object_usage_linter
 
   svi_data <- raw_data %>%
+    st_drop_geometry() %>%
     dplyr::filter(S0601_C01_001E > 0) %>% # Join back later to keep 0 pop tracts.
     dplyr::mutate(
       e_totpop = S0601_C01_001E,
@@ -431,10 +452,10 @@ calculate_svi_2018 <- function(raw_data, include_adjunct_vars) {
       m_pci = B19301_001M,
       e_nohsdp = B06009_002E,
       m_nohsdp = B06009_002M,
-      e_age_65 = S0101_C01_030E,
-      m_age_65 = S0101_C01_030M,
-      e_age_17 = B09001_001E,
-      m_age_17 = B09001_001M,
+      e_age65 = S0101_C01_030E,
+      m_age65 = S0101_C01_030M,
+      e_age17 = B09001_001E,
+      m_age17 = B09001_001M,
       e_disabl = DP02_0071E,
       m_disabl = DP02_0071M,
       e_sngpnt = (DP02_0007E + DP02_0009E),
@@ -473,9 +494,9 @@ calculate_svi_2018 <- function(raw_data, include_adjunct_vars) {
       mp_nohsdp = S0601_C01_033M,
       ep_age65 = S0101_C02_030E,
       mp_age65 = S0101_C02_030M,
-      ep_age17 = (e_age_17 / e_totpop) * 100,
+      ep_age17 = (e_age17 / e_totpop) * 100,
       mp_age17 = (
-        sqrt(m_age_17^2 - ((ep_age17 / 100)^2 * m_totpop^2)) /
+        sqrt(m_age17^2 - ((ep_age17 / 100)^2 * m_totpop^2)) /
           e_totpop
       ) * 100,
       ep_disabl = DP02_0071PE,
@@ -649,6 +670,7 @@ calculate_svi_2016 <- function(raw_data, include_adjunct_vars) {
 
   # nolint start: object_usage_linter
   svi_data <- raw_data %>%
+    st_drop_geometry() %>%
     dplyr::filter(S0601_C01_001E > 0) %>% # Join back later to keep 0 pop tracts.
     dplyr::mutate(
       e_totpop = S0601_C01_001E, #
@@ -665,10 +687,10 @@ calculate_svi_2016 <- function(raw_data, include_adjunct_vars) {
       m_pci = B19301_001M,
       e_nohsdp = B06009_002E,
       m_nohsdp = B06009_002M,
-      e_age_65 = S1501_C01_025E, #
-      m_age_65 = S1501_C01_025M, #
-      e_age_17 = B09001_001E,
-      m_age_17 = B09001_001M,
+      e_age65 = S1501_C01_025E, #
+      m_age65 = S1501_C01_025M, #
+      e_age17 = B09001_001E,
+      m_age17 = B09001_001M,
       e_disabl = DP02_0071E,
       m_disabl = DP02_0071M,
       e_sngpnt = (DP02_0007E + DP02_0009E),
@@ -707,9 +729,9 @@ calculate_svi_2016 <- function(raw_data, include_adjunct_vars) {
       mp_nohsdp = S0601_C01_033M,
       ep_age65 = S0101_C01_028E,
       mp_age65 = S0101_C01_028M,
-      ep_age17 = (e_age_17 / e_totpop) * 100,
+      ep_age17 = (e_age17 / e_totpop) * 100,
       mp_age17 = (
-        sqrt(m_age_17^2 - ((ep_age17 / 100)^2 * m_totpop^2)) /
+        sqrt(m_age17^2 - ((ep_age17 / 100)^2 * m_totpop^2)) /
           e_totpop
       ) * 100,
       ep_disabl = DP02_0071PE,
