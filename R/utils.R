@@ -65,3 +65,16 @@ validate_state <- function(state = NULL, identifier) {
     }
   }
 }
+
+
+#' Called when user specifies a region in which to calculate the SVI
+#'
+#' @param region sf object used to filter states to only those that intersect the region
+#' @param year passed to tigris::states()
+#' @return a list of state abbreviations to be used in the call to tidycensus::get_acs()
+get_region_states <- function(region, year) {
+  states <- tigris::states(cb = TRUE, year = year) %>%
+    st_filter(region)
+
+  return(states$STUSPS)
+}
