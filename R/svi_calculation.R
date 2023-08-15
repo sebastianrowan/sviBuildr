@@ -9,6 +9,8 @@
 #' @param county The county for which you are requesting data. County names and
 #'   FIPS codes are accepted. Must be combined with a value supplied to `state`.
 #'   Defaults to NULL.
+#' @param region An sf object used to spatially filter the geography before
+#'   calculating the SVI
 #' @param geometry if FALSE (the default), return a regular tibble of ACS data.
 #'   if TRUE, uses the tigris package to return an sf tibble with simple feature
 #'   geometry in the `geometry` column.
@@ -63,6 +65,11 @@ calculate_svi <- function(
         msg <- "region must be a spatial object."
         rlang::abort(msg)
       } else {
+        if (geometry == FALSE) {
+          msg <- "Using region requires geometry. Setting geometry=TRUE."
+          rlang::inform(msg)
+          geometry = TRUE
+        }
         state <- get_region_states(region, year)
         msg <- paste0("Getting data for specified region. States: ", paste(state, collapse = " "))
         rlang::inform(msg)
@@ -452,8 +459,8 @@ calculate_svi_2018 <- function(raw_data, include_adjunct_vars) {
       m_pci = `B19301_001M`,
       e_nohsdp = `B06009_002E`,
       m_nohsdp = `B06009_002M`,
-      e_age65 = ``S0101_C01_030E``,
-      m_age65 = S0101_C01_030M,
+      e_age65 = `S0101_C01_030E`,
+      m_age65 = `S0101_C01_030M`,
       e_age17 = `B09001_001E`,
       m_age17 = `B09001_001M`,
       e_disabl = `DP02_0071E`,
