@@ -65,6 +65,7 @@ calculate the Social Vulnerability Index for the specified region(s)</p>
 <span>  year <span class="op">=</span> <span class="fl">2020</span>,</span>
 <span>  state <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  county <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  region <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  geometry <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  include_adjunct_vars <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  key <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -94,6 +95,11 @@ State names and FIPS codes are accepted. Defaults to NULL.</p></dd>
 <dd><p>The county for which you are requesting data. County names and
 FIPS codes are accepted. Must be combined with a value supplied to <code>state</code>.
 Defaults to NULL.</p></dd>
+
+
+<dt>region</dt>
+<dd><p>An sf object used to spatially filter the geography before
+calculating the SVI</p></dd>
 
 
 <dt>geometry</dt>
