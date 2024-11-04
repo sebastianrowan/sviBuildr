@@ -89,7 +89,7 @@ calculate_svi <- function(
         rlang::abort(msg)
     }
 
-    if (sum(tolower(state) == "us") > 0) {
+    if (sum(tolower(state) == "us") > 0) { #TODO would it work to do if ("us" %in% state)
       msg <- "Calculating US svi not currently supported. Try using
       get_svi_from_cdc()"
       rlang::abort(msg)
