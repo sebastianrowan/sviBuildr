@@ -16,6 +16,10 @@ validate_state <- function(state = NULL, identifier) {
 
   state <- tolower(state)
 
+  if (nchar(state) == 1) {
+    state <- paste0("0", state)
+  }
+
   if (!(identifier %in% c("fips", "abb", "name", "name_fmt"))) {
     msg <- paste(identifier, "is not a valid identifier")
     rlang::abort(msg)
