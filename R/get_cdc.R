@@ -95,7 +95,7 @@ get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
   } else {
     temp2 <- tempfile()
     utils::unzip(temp, exdir = temp2)
-    svi_data <- sf::read_sf(temp2)
+    svi_data <- sf::st_read(paste0(temp2, "/", list.files(temp2)[1]))
   }
 
   return(svi_data)
