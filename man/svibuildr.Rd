@@ -2,6 +2,7 @@
 % Please edit documentation in R/svibuildr-package.R
 \docType{package}
 \name{svibuildr}
+\alias{svibuildr-package}
 \alias{svibuildr}
 \title{Return a social vulnerability index for a specified region according to the
 CDC ATSDR methodology using the tidycensus package developed by Kyle Walker.}
@@ -13,6 +14,14 @@ supported by the US Census Bureau.
 This package used the SVI methodology published by the CDC Agency for
 Toxic Substances and Disease Registry (ATSDR) but is neither endorsed nor
 supported by the ADSTR.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/sebastianrowan/svibuildr}
+  \item \url{https://sebastianrowan.github.io/svibuildr/}
+}
+
 }
 \author{
 Sebastian Rowan

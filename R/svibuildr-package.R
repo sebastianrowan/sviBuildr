@@ -9,8 +9,9 @@
 #' supported by the ADSTR.
 #'
 #' @author Sebastian Rowan
-#' @name svibuildr
 #' @docType package
+#' @name svibuildr
+"_PACKAGE"
 #' @import cli
 #' @import dplyr
 #' @import sf
