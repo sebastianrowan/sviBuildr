@@ -70,6 +70,14 @@ test_that(
   }
 )
 
+
+test_that(
+  "Properly downloads state and US data with and without geometry for 2022"
+  {
+
+  }
+)
+
 test_that(
   "Properly downloads state and US data with no geometry (not 2000 or 2010).",
   {

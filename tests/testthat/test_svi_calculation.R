@@ -83,11 +83,12 @@ test_that(
     expect_s3_class(calculate_svi("county", year = 2016, state = "nh"), "data.frame")
     expect_s3_class(calculate_svi("county", year = 2018, state = "nh"), "data.frame")
     expect_s3_class(calculate_svi("county", year = 2020, state = "nh"), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2022, state = "nh"), "data.frame")
   }
 )
 
 test_that(
-  "Properly downloads and calculates multi-state 2016, 2018 or 2020 SVI",
+  "Properly downloads and calculates multi-state 2016, 2018, 2020 or 2022 SVI",
   {
     #expect_s3_class(calculate_svi("county", year = 2000, state = c(33, "Vermont", "Me")), "data.frame")
     #expect_s3_class(calculate_svi("county", year = 2010, state = c(33, "Vermont", "Me")), "data.frame")
@@ -95,11 +96,12 @@ test_that(
     expect_s3_class(calculate_svi("county", year = 2016, state = c(33, "Vermont", "Me")), "data.frame")
     expect_s3_class(calculate_svi("county", year = 2018, state = c(33, "Vermont", "Me")), "data.frame")
     expect_s3_class(calculate_svi("county", year = 2020, state = c(33, "Vermont", "Me")), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2022, state = c(33, "Vermont", "Me")), "data.frame")
   }
 )
 
 test_that(
-  "Properly downloads and calculates 2016, 2018 or 2020 SVI with adjunct vars",
+  "Properly downloads and calculates 2016, 2018, 2020 or 2022 SVI with adjunct vars",
   {
     #expect_s3_class(calculate_svi("county", year = 2000, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
     #expect_s3_class(calculate_svi("county", year = 2010, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
@@ -107,5 +109,6 @@ test_that(
     expect_s3_class(calculate_svi("county", year = 2016, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
     expect_s3_class(calculate_svi("county", year = 2018, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
     expect_s3_class(calculate_svi("county", year = 2020, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
+    expect_s3_class(calculate_svi("county", year = 2022, state = "Vermont", include_adjunct_vars = TRUE), "data.frame")
 }
 )

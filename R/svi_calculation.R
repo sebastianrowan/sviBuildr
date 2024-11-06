@@ -181,12 +181,12 @@ calculate_svi_2022 <- function(raw_data, include_adjunct_vars) {
       m_uninsur = `S2701_C04_001M`,
       e_age65 = `S0101_C01_030E`,
       m_age65 = `S0101_C01_030M`,
-      e_age17 = `B09001_001E`,
-      m_age17 = `B09001_001M`,
+      e_age17 = `DP05_0019E`,
+      m_age17 = `DP05_0019M`,
       e_disabl = `DP02_0072E`,
       m_disabl = `DP02_0072M`,
-      e_sngpnt = (`B11012_010E` + `B11012_015E`),
-      m_sngpnt = sqrt(`B11012_010M`^2 + `B11012_015M`^2),
+      e_sngpnt = (`DP02_0007E` + `DP02_0011E`),
+      m_sngpnt = sqrt(`DP02_0007M`^2 + `DP02_0011M`^2),
       e_limeng = (
         `B16005_007E` + `B16005_008E` + `B16005_012E` + `B16005_013E` +
           `B16005_017E` + `B16005_018E` + `B16005_022E` + `B16005_023E` +
@@ -199,14 +199,8 @@ calculate_svi_2022 <- function(raw_data, include_adjunct_vars) {
           `B16005_029M`^2 + `B16005_030M`^2 + `B16005_034M`^2 + `B16005_035M`^2 +
           `B16005_039M`^2 + `B16005_040M`^2 + `B16005_044M`^2 + `B16005_045M`^2
       ),
-      e_minrty = (
-        `DP05_0071E` + `DP05_0078E` + `DP05_0079E` + `DP05_0080E` +
-          `DP05_0081E` + `DP05_0082E` + `DP05_0083E`
-      ),
-      m_minrty = sqrt(
-        `DP05_0071M`^2 + `DP05_0078M`^2 + `DP05_0079M`^2 + `DP05_0080M`^2 +
-          `DP05_0081M`^2 + `DP05_0082M`^2 + `DP05_0083M`^2
-      ),
+      e_minrty = (`DP05_0001E` - `DP05_0079E`),
+      m_minrty = sqrt(m_totpop^2 + `DP05_0079M`^2),
       e_munit = (`DP04_0012E` + `DP04_0013E`),
       m_munit = sqrt(`DP04_0012M`^2 + `DP04_0013M`^2),
       e_mobile = `DP04_0014E`,
@@ -235,14 +229,11 @@ calculate_svi_2022 <- function(raw_data, include_adjunct_vars) {
       mp_uninsur = `S2701_C05_001M`,
       ep_age65 = `S0101_C02_030E`,
       mp_age65 = `S0101_C02_030M`,
-      ep_age17 = (e_age17 / e_totpop) * 100,
-      mp_age17 = (
-        sqrt(m_age17^2 - ((ep_age17 / 100)^2 * m_totpop^2)) /
-          e_totpop
-      ) * 100,
+      ep_age17 = `DP05_0019PE`,
+      mp_age17 = `DP05_0019PM`,
       ep_disabl = `DP02_0072PE`,
       mp_disabl = `DP02_0072PM`,
-      ep_sngpnt = (e_sngpnt / e_hh) * 100,
+      ep_sngpnt = `DP02_0007PE` + `DP02_0011PE`,
       mp_sngpnt = (
         sqrt(m_sngpnt^2 - ((ep_sngpnt / 100)^2 * m_hh^2)) /
           e_hh
@@ -252,19 +243,19 @@ calculate_svi_2022 <- function(raw_data, include_adjunct_vars) {
         sqrt(m_limeng^2 - ((ep_limeng / 100)^2 * `B16005_001M`^2)) /
           `B16005_001E`
       ) * 100,
-      ep_minrty = (e_minrty / e_totpop) * 100,
+      ep_minrty = 100 - `DP05_0079PE`,
       mp_minrty = (
         sqrt(m_minrty^2 - ((ep_minrty / 100)^2 * m_totpop^2)) /
           e_totpop
       ) * 100,
-      ep_munit = (e_munit / e_hu) * 100,
+      ep_munit = `DP04_0012PE` + `DP04_0013PE`,
       mp_munit = (
         sqrt(m_munit^2 - ((ep_munit / 100)^2 * m_hu^2)) /
           e_hu
       ) * 100,
       ep_mobile = `DP04_0014PE`,
       mp_mobile = `DP04_0014PM`,
-      ep_crowd = (e_crowd / `DP04_0002E`) * 100,
+      ep_crowd = `DP04_0078PE` + `DP04_0079PE`,
       mp_crowd = (
         sqrt(m_crowd^2 - ((ep_crowd / 100)^2 * `DP04_0002M`^2)) /
           `DP04_0002E`
@@ -281,41 +272,38 @@ calculate_svi_2022 <- function(raw_data, include_adjunct_vars) {
   if (include_adjunct_vars == TRUE) {
     svi_data <- svi_data %>%
       dplyr::mutate(
-        e_noint = (`S2802_C01_001E` - `S2802_C02_001E`),
-        m_noint = sqrt(`S2802_C01_001M`^2 - `S2802_C02_001M`^2),
-        e_afam = `DP05_0078E`,
-        m_afam = `DP05_0078M`,
-        e_hisp = `DP05_0071E`,
-        m_hisp = `DP05_0071M`,
-        e_asian = `DP05_0080E`,
-        m_asian = `DP05_0080M`,
-        e_aian = `DP05_0079E`,
-        m_aian = `DP05_0079M`,
-        e_nhpi = `DP05_0081E`,
-        m_nhpi = `DP05_0081M`,
-        e_twomore = `DP05_0083E`,
-        m_twomore = `DP05_0083M`,
-        e_otherrace = `DP05_0082E`,
-        m_otherrace = `DP05_0082M`,
-        ep_noint = (e_noint / `S2802_C01_001E`) * 100,
-        mp_noint = (
-          sqrt(m_noint^2 - ((ep_noint / 100)^2 * `S2802_C01_001M`^2)) /
-            `S2802_C01_001E`
-        ) * 100,
-        ep_afam = `DP05_0078PE`,
-        mp_afam = `DP05_0078PM`,
-        ep_hisp = `DP05_0071PE`,
-        mp_hisp = `DP05_0071PM`,
-        ep_asian = `DP05_0080PE`,
-        mp_asian = `DP05_0080PM`,
-        ep_aian = `DP05_0079PE`,
-        mp_aian = `DP05_0079PM`,
-        ep_nhpi = `DP05_0081PE`,
-        mp_nhpi = `DP05_0081PM`,
-        ep_twomore = `DP05_0083PE`,
-        mp_twomore = `DP05_0083PM`,
-        ep_otherrace = `DP05_0082PE`,
-        mp_otherrace = `DP05_0082PM`,
+        e_noint = `S2801_C01_019E`,
+        m_noint = `S2801_C01_019M`,
+        e_afam = `DP05_0080E`,
+        m_afam = `DP05_0080M`,
+        e_hisp = `DP05_0073E`,
+        m_hisp = `DP05_0073M`,
+        e_asian = `DP05_0082E`,
+        m_asian = `DP05_0082M`,
+        e_aian = `DP05_0081E`,
+        m_aian = `DP05_0081M`,
+        e_nhpi = `DP05_0083E`,
+        m_nhpi = `DP05_0083M`,
+        e_twomore = `DP05_0085E`,
+        m_twomore = `DP05_0085M`,
+        e_otherrace = `DP05_0084E`,
+        m_otherrace = `DP05_0084M`,
+        ep_noint = `S2801_C02_019E`,
+        mp_noint = `S2801_C02_019M`,
+        ep_afam = `DP05_0080PE`,
+        mp_afam = `DP05_0080PM`,
+        ep_hisp = `DP05_0073PE`,
+        mp_hisp = `DP05_0073PM`,
+        ep_asian = `DP05_0082PE`,
+        mp_asian = `DP05_0082PM`,
+        ep_aian = `DP05_0081PE`,
+        mp_aian = `DP05_0081PM`,
+        ep_nhpi = `DP05_0083PE`,
+        mp_nhpi = `DP05_0083PM`,
+        ep_twomore = `DP05_0085PE`,
+        mp_twomore = `DP05_0085PM`,
+        ep_otherrace = `DP05_0084PE`,
+        mp_otherrace = `DP05_0084PM`,
       )
 
   }
