@@ -1,7 +1,7 @@
 svibuildr
 ================
 
-<img src=logo.png width = "250px">
+<img src=logo_new.png width = "250px">
 
 <!-- badges: start -->
 
