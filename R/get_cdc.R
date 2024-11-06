@@ -95,7 +95,13 @@ get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
   } else {
     temp2 <- tempfile()
     utils::unzip(temp, exdir = temp2)
-    svi_data <- sf::st_read(paste0(temp2, "/", list.files(temp2)[1]))
+
+    if (endsWith(list.files(temp2)[1], ".gdb")) {
+      svi_data <- sf::st_read(list.files(temp2, full.names = TRUE)[1])
+    } else {
+      svi_data <- sf::st_read(list.files(list.files(temp2, full.names = T), full.names = T))
+    }
+    sf::st_read <- list.files(paste0(path, "/", list.files(path)[1]))[1]
   }
 
   return(svi_data)
