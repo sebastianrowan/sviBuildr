@@ -256,7 +256,8 @@ calculate_svi_2022 <- function(raw_data, include_adjunct_vars) {
       ep_mobile = `DP04_0014PE`,
       mp_mobile = `DP04_0014PM`,
       ep_crowd = `DP04_0078PE` + `DP04_0079PE`,
-      mp_crowd = (
+      mp_crowd = ( # this is the formula documented by CDC, but it's not clear why
+        # the mp_crowd calculation was not updated to match the 2020 ep_crowd calc vars
         sqrt(m_crowd^2 - ((ep_crowd / 100)^2 * `DP04_0002M`^2)) /
           `DP04_0002E`
       ) * 100,
