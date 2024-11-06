@@ -26,11 +26,9 @@ get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
     rlang::abort(msg)
   }
 
-  if (!(year %in% c(2000, 2010, 2014, 2016, 2018, 2020))) {
+  if (!(year %in% c(2000, 2010, 2014, 2016, 2018, 2020, 2022))) {
     msg <- paste0("SVI not available for year ", year)
     rlang::abort(msg)
-  } else if (year %in% c(2000, 2010)) {
-    get_2000_2010_data(geography, year, state, geometry)
   }
 
   if (is.null(state)) {
@@ -44,50 +42,49 @@ get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
 
   state <- tolower(state)
 
-  base_url <- paste0("svi.cdc.gov/Documents/Data/", year, "_SVI_Data/")
+  base_url <- "svi.cdc.gov/Documents/Data"
+
+  type_var <- ifelse(
+    geometry == TRUE,
+    "db",
+    "csv"
+  )
+
+  counties_var <- ifelse(
+    geography == "county",
+    "states_counties",
+    "states"
+  )
+
+  state_name <- validate_state(state, "name_fmt")
+
+  territory_var <- ifelse(
+    state_name == "US",
+    paste0("SVI_", year, "_US"),
+    state_name
+  )
+
+  county_var <- ifelse(
+    geography == "county",
+    "_county",
+    ""
+  )
+
   file_ext <- ifelse(
     geometry == TRUE,
     ".zip",
     ".csv"
   )
 
-  folder <- ifelse(
-    state == "us",
-    "",
-    ifelse(
-      geography == "county",
-      "States_Counties/",
-      "States/"
-    )
-  )
-  folder <- ifelse(
-    geometry == TRUE,
-    folder,
-    paste0("CSV/", folder)
-  )
+  filename = paste0(territory_var, county_var, file_ext)
 
-  state_name <- validate_state(state, "name_fmt")
-
-  filename <- ifelse(
-    state_name == "US",
-    paste0("SVI", year, "_US"),
-    paste0(state_name)
-  )
-  filename <- ifelse(
-    geography == "county",
-    ifelse(
-      year == 2014,
-      paste0(filename, "_CNTY"),
-      paste0(filename, "_COUNTY")
-    ),
-    filename
-  )
-
-  url <- paste0(
+  url <- paste(
     base_url,
-    folder,
+    year,
+    type_var,
+    counties_var,
     filename,
-    file_ext
+    sep = "/"
   )
 
   temp <- tempfile()
@@ -98,7 +95,12 @@ get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
   } else {
     temp2 <- tempfile()
     utils::unzip(temp, exdir = temp2)
-    svi_data <- sf::read_sf(temp2)
+
+    if (endsWith(list.files(temp2)[1], ".gdb")) {
+      svi_data <- sf::st_read(list.files(temp2, full.names = TRUE)[1])
+    } else {
+      svi_data <- sf::st_read(list.files(list.files(temp2, full.names = T), full.names = TRUE))
+    }
   }
 
   return(svi_data)

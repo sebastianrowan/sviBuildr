@@ -44,7 +44,7 @@
 #' @import dplyr
 #' @export
 calculate_svi <- function(
-    geography, year = 2020,
+    geography, year = 2022,
     state = NULL, county = NULL,
     region = NULL,
     geometry = FALSE, include_adjunct_vars = FALSE,
@@ -54,9 +54,9 @@ calculate_svi <- function(
     #TODO: Implement pre-2020 methodology
     # once other years implemented, use_2020_method should only be checked if
     #   using previous year. Otherwise, ignore with message.
-    if (!(year %in% c(2016, 2018, 2020))) {
-        msg <- "SVI calculation currently only available for years 2016, 2018
-        and 2020. Use get_svi_from_cdc() instead."
+    if (!(year %in% c(2016, 2018, 2020, 2022))) {
+        msg <- "SVI calculation currently only available for years 2016, 2018,
+        2020 and 2022. Use get_svi_from_cdc() instead."
         rlang::abort(msg)
     }
 
@@ -130,6 +130,7 @@ calculate_svi <- function(
 
     svi_data <- switch(
       as.character(year),
+      "2022" = calculate_svi_2022(raw_data, include_adjunct_vars),
       "2020" = calculate_svi_2020(raw_data, include_adjunct_vars),
       "2018" = calculate_svi_2018(raw_data, include_adjunct_vars),
       "2016" = calculate_svi_2016(raw_data, include_adjunct_vars)
@@ -139,6 +140,284 @@ calculate_svi <- function(
 }
 
 
+
+
+#' Calculate the 2022 SVI for the given region
+#'
+#' @param raw_data raw data returned from call to get_acs() with appropriate vars
+#' @param include_adjunct_vars if TRUE, svi calulation will include adjunct vars
+#'
+#' @return A tibble or sf tibble of the 2020 SVI and underlying data for the
+#'   specified area.
+calculate_svi_2022 <- function(raw_data, include_adjunct_vars) {
+
+  # calculate and rename variables following SVI documentation
+  # nolint start: object_usage_linter
+  svi_data <- raw_data %>%
+    st_drop_geometry() %>%
+    dplyr::filter(`S0601_C01_001E` > 0) %>% # Join back later to keep 0 pop tracts.
+    dplyr::mutate(
+      e_totpop = `S0601_C01_001E`,
+      m_totpop = `S0601_C01_001M`,
+      e_hu = `DP04_0001E`,
+      m_hu = `DP04_0001M`,
+      e_hh = `DP02_0001E`,
+      m_hh = `DP02_0001M`,
+      e_pov150 = `S1701_C01_040E`,
+      m_pov150 = `S1701_C01_040M`,
+      e_unemp = `DP03_0005E`,
+      m_unemp = `DP03_0005M`,
+      e_hburd = (
+        `S2503_C01_028E` + `S2503_C01_032E` +
+          `S2503_C01_036E` + `S2503_C01_040E`
+      ),
+      m_hburd = sqrt(
+        `S2503_C01_028M`^2 + `S2503_C01_032M`^2 +
+          `S2503_C01_036M`^2 + `S2503_C01_040M`^2
+      ),
+      e_nohsdp = `B06009_002E`,
+      m_nohsdp = `B06009_002M`,
+      e_uninsur = `S2701_C04_001E`,
+      m_uninsur = `S2701_C04_001M`,
+      e_age65 = `S0101_C01_030E`,
+      m_age65 = `S0101_C01_030M`,
+      e_age17 = `DP05_0019E`,
+      m_age17 = `DP05_0019M`,
+      e_disabl = `DP02_0072E`,
+      m_disabl = `DP02_0072M`,
+      e_sngpnt = (`DP02_0007E` + `DP02_0011E`),
+      m_sngpnt = sqrt(`DP02_0007M`^2 + `DP02_0011M`^2),
+      e_limeng = (
+        `B16005_007E` + `B16005_008E` + `B16005_012E` + `B16005_013E` +
+          `B16005_017E` + `B16005_018E` + `B16005_022E` + `B16005_023E` +
+          `B16005_029E` + `B16005_030E` + `B16005_034E` + `B16005_035E` +
+          `B16005_039E` + `B16005_040E` + `B16005_044E` + `B16005_045E`
+      ),
+      m_limeng = sqrt(
+        `B16005_007M`^2 + `B16005_008M`^2 + `B16005_012M`^2 + `B16005_013M`^2 +
+          `B16005_017M`^2 + `B16005_018M`^2 + `B16005_022M`^2 + `B16005_023M`^2 +
+          `B16005_029M`^2 + `B16005_030M`^2 + `B16005_034M`^2 + `B16005_035M`^2 +
+          `B16005_039M`^2 + `B16005_040M`^2 + `B16005_044M`^2 + `B16005_045M`^2
+      ),
+      e_minrty = (`DP05_0001E` - `DP05_0079E`),
+      m_minrty = sqrt(m_totpop^2 + `DP05_0079M`^2),
+      e_munit = (`DP04_0012E` + `DP04_0013E`),
+      m_munit = sqrt(`DP04_0012M`^2 + `DP04_0013M`^2),
+      e_mobile = `DP04_0014E`,
+      m_mobile = `DP04_0014M`,
+      e_crowd = (`DP04_0078E` + `DP04_0079E`),
+      m_crowd = sqrt(`DP04_0078M`^2 + `DP04_0079M`^2),
+      e_noveh = `DP04_0058E`,
+      m_noveh = `DP04_0058M`,
+      e_groupq = `B26001_001E`,
+      m_groupq = `B26001_001M`,
+      ep_pov150 = (e_pov150 / `S1701_C01_001E`) * 100,
+      mp_pov150 = (
+        sqrt(m_pov150^2 - ((ep_pov150 / 100)^2 * `S1701_C01_001M`^2)) /
+          `S1701_C01_001E`
+      ) * 100,
+      ep_unemp = `DP03_0009PE`,
+      mp_unemp = `DP03_0009PM`,
+      ep_hburd = (e_hburd / `S2503_C01_001E`) * 100,
+      mp_hburd = (
+        sqrt(m_hburd^2 - ((ep_hburd / 100)^2 * `S2503_C01_001M`^2)) /
+          `S2503_C01_001E`
+      ) * 100,
+      ep_nohsdp = `S0601_C01_033E`,
+      mp_nohsdp = `S0601_C01_033M`,
+      ep_uninsur = `S2701_C05_001E`,
+      mp_uninsur = `S2701_C05_001M`,
+      ep_age65 = `S0101_C02_030E`,
+      mp_age65 = `S0101_C02_030M`,
+      ep_age17 = `DP05_0019PE`,
+      mp_age17 = `DP05_0019PM`,
+      ep_disabl = `DP02_0072PE`,
+      mp_disabl = `DP02_0072PM`,
+      ep_sngpnt = `DP02_0007PE` + `DP02_0011PE`,
+      mp_sngpnt = (
+        sqrt(m_sngpnt^2 - ((ep_sngpnt / 100)^2 * m_hh^2)) /
+          e_hh
+      ) * 100,
+      ep_limeng = (e_limeng / `B16005_001E`) * 100,
+      mp_limeng = (
+        sqrt(m_limeng^2 - ((ep_limeng / 100)^2 * `B16005_001M`^2)) /
+          `B16005_001E`
+      ) * 100,
+      ep_minrty = 100 - `DP05_0079PE`,
+      mp_minrty = (
+        sqrt(m_minrty^2 - ((ep_minrty / 100)^2 * m_totpop^2)) /
+          e_totpop
+      ) * 100,
+      ep_munit = `DP04_0012PE` + `DP04_0013PE`,
+      mp_munit = (
+        sqrt(m_munit^2 - ((ep_munit / 100)^2 * m_hu^2)) /
+          e_hu
+      ) * 100,
+      ep_mobile = `DP04_0014PE`,
+      mp_mobile = `DP04_0014PM`,
+      ep_crowd = `DP04_0078PE` + `DP04_0079PE`,
+      mp_crowd = ( # this is the formula documented by CDC, but it's not clear why
+        # the mp_crowd calculation was not updated to match the 2020 ep_crowd calc vars
+        sqrt(m_crowd^2 - ((ep_crowd / 100)^2 * `DP04_0002M`^2)) /
+          `DP04_0002E`
+      ) * 100,
+      ep_noveh = `DP04_0058PE`,
+      mp_noveh = `DP04_0058PM`,
+      ep_groupq = (e_groupq / e_totpop) * 100,
+      mp_groupq = (
+        sqrt(m_groupq^2 - ((ep_groupq / 100)^2 * m_totpop^2)) /
+          e_totpop
+      ) * 100,
+    )
+
+  if (include_adjunct_vars == TRUE) {
+    svi_data <- svi_data %>%
+      dplyr::mutate(
+        e_noint = `S2801_C01_019E`,
+        m_noint = `S2801_C01_019M`,
+        e_afam = `DP05_0080E`,
+        m_afam = `DP05_0080M`,
+        e_hisp = `DP05_0073E`,
+        m_hisp = `DP05_0073M`,
+        e_asian = `DP05_0082E`,
+        m_asian = `DP05_0082M`,
+        e_aian = `DP05_0081E`,
+        m_aian = `DP05_0081M`,
+        e_nhpi = `DP05_0083E`,
+        m_nhpi = `DP05_0083M`,
+        e_twomore = `DP05_0085E`,
+        m_twomore = `DP05_0085M`,
+        e_otherrace = `DP05_0084E`,
+        m_otherrace = `DP05_0084M`,
+        ep_noint = `S2801_C02_019E`,
+        mp_noint = `S2801_C02_019M`,
+        ep_afam = `DP05_0080PE`,
+        mp_afam = `DP05_0080PM`,
+        ep_hisp = `DP05_0073PE`,
+        mp_hisp = `DP05_0073PM`,
+        ep_asian = `DP05_0082PE`,
+        mp_asian = `DP05_0082PM`,
+        ep_aian = `DP05_0081PE`,
+        mp_aian = `DP05_0081PM`,
+        ep_nhpi = `DP05_0083PE`,
+        mp_nhpi = `DP05_0083PM`,
+        ep_twomore = `DP05_0085PE`,
+        mp_twomore = `DP05_0085PM`,
+        ep_otherrace = `DP05_0084PE`,
+        mp_otherrace = `DP05_0084PM`,
+      )
+
+  }
+
+  # calculate variable percent_ranks and themes
+  svi_data <- svi_data %>%
+    dplyr::mutate(dplyr::across(
+      .cols = dplyr::starts_with("ep"),
+      .fns = ~round(., 1) # I think differences between my calcs and CDC may be due to rounding differences
+    )) %>%
+    dplyr::mutate(
+      epl_pov150 = percent_rank(ep_pov150),
+      epl_unemp = percent_rank(ep_unemp),
+      epl_hburd = percent_rank(ep_hburd),
+      epl_nohsdp = percent_rank(ep_nohsdp),
+      epl_uninsur = percent_rank(ep_uninsur),
+      epl_age65 = percent_rank(ep_age65),
+      epl_age17 = percent_rank(ep_age17),
+      epl_disabl = percent_rank(ep_disabl),
+      epl_sngpnt = percent_rank(ep_sngpnt),
+      epl_limeng = percent_rank(ep_limeng),
+      epl_minrty = percent_rank(ep_minrty),
+      epl_munit = percent_rank(ep_munit),
+      epl_mobile = percent_rank(ep_mobile),
+      epl_crowd = percent_rank(ep_crowd),
+      epl_noveh = percent_rank(ep_noveh),
+      epl_groupq = percent_rank(ep_groupq),
+    ) %>%
+    dplyr::mutate(dplyr::across(
+      .cols = dplyr::starts_with("epl"),
+      .fns = ~round(., 4) # I think differences between my calcs and CDC may be due to rounding differences
+    )) %>%
+    dplyr::mutate(
+      spl_theme1 = (
+        epl_pov150 + epl_unemp + epl_hburd + epl_nohsdp + epl_uninsur
+      ),
+      spl_theme2 = (
+        epl_age65 + epl_age17 + epl_disabl + epl_sngpnt + epl_limeng
+      ),
+      spl_theme3 = epl_minrty,
+      spl_theme4 = (
+        epl_munit + epl_mobile + epl_crowd + epl_noveh + epl_groupq
+      ),
+      spl_themes = (
+        spl_theme1 + spl_theme2 + spl_theme3 + spl_theme4
+      )
+    ) %>%
+    dplyr::mutate(dplyr::across(
+      .cols = dplyr::starts_with("spl"),
+      .fns = ~round(., 4) # I think differences between my calcs and CDC may be due to rounding differences
+    )) %>%
+    dplyr::mutate(
+      rpl_theme1 = percent_rank(spl_theme1),
+      rpl_theme2 = percent_rank(spl_theme2),
+      rpl_theme3 = percent_rank(spl_theme3),
+      rpl_theme4 = percent_rank(spl_theme4),
+      rpl_themes = percent_rank(spl_themes),
+    ) %>%
+    dplyr::mutate(dplyr::across(
+      .cols = dplyr::starts_with("rpl"),
+      .fns = ~round(., 4) # I think differences between my calcs and CDC may be due to rounding differences
+    ))
+  # nolint end
+
+
+  flag_vars <- c(
+    "epl_pov150", "epl_unemp", "epl_hburd", "epl_nohsdp", "epl_uninsur",
+    "epl_age65", "epl_age17", "epl_disabl", "epl_sngpnt", "epl_limeng",
+    "epl_minrty", "epl_munit", "epl_mobile", "epl_crowd", "epl_noveh",
+    "epl_groupq"
+  )
+
+  # calculate flags
+  svi_data <- svi_data %>%
+    dplyr::mutate(across(
+      all_of(flag_vars),
+      ~ .x >= 0.9,
+      .names = "f{substring(.col, 4)}"
+    ))
+
+  svi_data <- svi_data %>%
+    dplyr::mutate(
+      f_theme1 = (
+        f_pov150 + f_unemp + f_hburd + f_nohsdp + f_uninsur
+      ),
+      f_theme2 = (
+        f_age65 + f_age17 + f_disabl + f_sngpnt + f_limeng
+      ),
+      f_theme3 = f_minrty,
+      f_theme4 = (
+        f_munit + f_mobile + f_crowd + f_noveh + f_groupq
+      ),
+      f_total = (
+        f_theme1 + f_theme2 + f_theme3 + f_theme4
+      )
+    ) %>%
+    dplyr::select(
+      dplyr::matches("GEOID|NAME|^([emsrf][p|pl]*_)")
+    ) # only include svi variables
+
+  # rejoin 0 pop tracts and set na values to -999
+  svi_data <- raw_data %>%
+    select(GEOID) %>%
+    left_join(svi_data) %>%
+    dplyr::mutate(dplyr::across(
+      .cols = dplyr::matches(
+        "^([emsr][p|pl]*_)"
+      ),
+      .fns = ~tidyr::replace_na(., -999)
+    ))
+
+  return(svi_data)
+}
 
 
 #' Calculate the 2020 SVI for the given region
@@ -428,7 +707,6 @@ calculate_svi_2020 <- function(raw_data, include_adjunct_vars) {
 
   return(svi_data)
 }
-
 
 #' Calculate the 2018 SVI for the given region
 #'

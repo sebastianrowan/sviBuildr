@@ -7,7 +7,7 @@ calculate the Social Vulnerability Index for the specified region(s)}
 \usage{
 calculate_svi(
   geography,
-  year = 2020,
+  year = 2022,
   state = NULL,
   county = NULL,
   region = NULL,
