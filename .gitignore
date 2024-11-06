@@ -6,4 +6,4 @@ svi.cdc.gov
 .tex
 .lintr
 docs
-tests\testthat\testthat-problems.rds
+tests/testthat/testthat-problems.rds
