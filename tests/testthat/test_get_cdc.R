@@ -137,10 +137,48 @@ test_that(
 )
 
 test_that(
-  "Properly downloads state and US data with geometry (not 2000 or 2010).",
+  "Properly downloads state data with geometry (2014 - 2022).",
   {
     expect_s3_class(
+      get_svi_from_cdc("county", year = 2022, state = 33, geometry = TRUE),
+      "data.frame"
+    )
+    expect_s3_class(
       get_svi_from_cdc("county", year = 2020, state = 33, geometry = TRUE),
+      "data.frame"
+    )
+    expect_s3_class(
+      get_svi_from_cdc("county", year = 2018, state = 33, geometry = TRUE),
+      "data.frame"
+    )
+    expect_s3_class(
+      get_svi_from_cdc("county", year = 2016, state = 33, geometry = TRUE),
+      "data.frame"
+    )
+    expect_s3_class(
+      get_svi_from_cdc("county", year = 2014, state = 33, geometry = TRUE),
+      "data.frame"
+    )
+  }
+)
+
+test_that(
+  "Properly downloads US data with geometry (2014 - 2022).",
+  {
+    expect_s3_class(
+      get_svi_from_cdc("county", year = 2022, state = 'US', geometry = TRUE),
+      "data.frame"
+    )
+    expect_s3_class(
+      get_svi_from_cdc("county", year = 2020, state = 'US', geometry = TRUE),
+      "data.frame"
+    )
+    expect_s3_class(
+      get_svi_from_cdc("county", year = 2018, state = 'US', geometry = TRUE),
+      "data.frame"
+    )
+    expect_s3_class(
+      get_svi_from_cdc("county", year = 2016, state = 'US', geometry = TRUE),
       "data.frame"
     )
     expect_s3_class(
