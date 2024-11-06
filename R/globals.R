@@ -16,7 +16,7 @@ utils::globalVariables(
         "DP05_0071", "DP05_0080", "DP05_0079", "DP05_0081", "DP05_0083",
         "DP05_0082", "DP05_0078P", "DP05_0071P", "DP05_0080P", "DP05_0079P",
         "DP05_0081P", "DP05_0083P", "DP05_0082P", "epl_pov150", "epl_unemp",
-        "epl_hburd", "epl_nohsdp", "epl_uninsur",
+        "epl_hburd", "epl_nohsdp", "epl_uninsur", "epl_pci",
         "epl_age65", "epl_age17", "epl_disabl", "epl_sngpnt", "epl_limeng",
         "epl_minrty", "epl_munit", "epl_mobile", "epl_crowd", "epl_noveh",
         "epl_groupq", "f_pov150", "f_unemp", "f_hburd", "f_nohsdp", "f_uninsur",
@@ -71,7 +71,13 @@ utils::globalVariables(
         "S2503_C01_028E", "S2503_C01_028M", "S2503_C01_032E", "S2503_C01_032M",
         "S2503_C01_036E", "S2503_C01_036M", "S2503_C01_040E", "S2503_C01_040M",
         "S2701_C04_001E", "S2701_C04_001M", "S2701_C05_001E", "S2701_C05_001M",
-        "S2802_C01_001E", "S2802_C01_001M", "S2802_C02_001E", "S2802_C02_001M"
+        "S2802_C01_001E", "S2802_C01_001M", "S2802_C02_001E", "S2802_C02_001M",
+        "DP02_0007PE", "DP02_0011E", "DP02_0011M", "DP02_0011PE", "DP04_0012PE", "DP04_0013PE",
+        "DP04_0078PE", "DP04_0079PE", "DP05_0001E", "DP05_0019E", "DP05_0019M", "DP05_0019PE",
+        "DP05_0019PM", "DP05_0073E", "DP05_0073M", "DP05_0073PE", "DP05_0073PM", "DP05_0084E",
+        "DP05_0084M", "DP05_0084PE", "DP05_0084PM", "DP05_0085E", "DP05_0085M", "DP05_0085PE",
+        "DP05_0085PM", "S2801_C01_019E", "S2801_C01_019M", "S2801_C02_019E",
+        "S2801_C02_019M"
     )
 )
 
