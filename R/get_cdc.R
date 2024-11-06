@@ -26,7 +26,7 @@ get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
     rlang::abort(msg)
   }
 
-  if (!(year %in% c(2000, 2010, 2014, 2016, 2018, 2020))) {
+  if (!(year %in% c(2000, 2010, 2014, 2016, 2018, 2020, 2022))) {
     msg <- paste0("SVI not available for year ", year)
     rlang::abort(msg)
   } else if (year %in% c(2000, 2010)) {
