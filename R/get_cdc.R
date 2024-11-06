@@ -44,50 +44,49 @@ get_svi_from_cdc <- function(geography, year, state = NULL, geometry = FALSE) {
 
   state <- tolower(state)
 
-  base_url <- paste0("svi.cdc.gov/Documents/Data/", year, "_SVI_Data/")
+  base_url <- "svi.cdc.gov/Documents/Data"
+
+  type_var <- ifelse(
+    geometry == TRUE,
+    "db",
+    "csv"
+  )
+
+  counties_var <- ifelse(
+    geography == "county",
+    "states_counties",
+    "states"
+  )
+
+  state_name <- validate_state(state, "name_fmt")
+
+  territory_var <- ifelse(
+    state_name == "US",
+    paste0("SVI_", year, "_US"),
+    state_name
+  )
+
+  county_var <- ifelse(
+    geography == "county",
+    "_county",
+    ""
+  )
+
   file_ext <- ifelse(
     geometry == TRUE,
     ".zip",
     ".csv"
   )
 
-  folder <- ifelse(
-    state == "us",
-    "",
-    ifelse(
-      geography == "county",
-      "States_Counties/",
-      "States/"
-    )
-  )
-  folder <- ifelse(
-    geometry == TRUE,
-    folder,
-    paste0("CSV/", folder)
-  )
+  filename = paste0(territory_var, county_var, file_ext)
 
-  state_name <- validate_state(state, "name_fmt")
-
-  filename <- ifelse(
-    state_name == "US",
-    paste0("SVI", year, "_US"),
-    paste0(state_name)
-  )
-  filename <- ifelse(
-    geography == "county",
-    ifelse(
-      year == 2014,
-      paste0(filename, "_CNTY"),
-      paste0(filename, "_COUNTY")
-    ),
-    filename
-  )
-
-  url <- paste0(
+  url <- paste(
     base_url,
-    folder,
+    year,
+    type_var,
+    counties_var,
     filename,
-    file_ext
+    sep = "/"
   )
 
   temp <- tempfile()
